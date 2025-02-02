@@ -202,3 +202,19 @@ ul {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.logout-btn{
+  position: fixed;
+  width: 150px;
+  height: 50px;
+  top: 40px;
+  right: 40px;
+  font-weight: bolder;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  z-index: 9999;
+  color: #007bff;
+  background-color: white;
+  border-color: #007bff;
+}

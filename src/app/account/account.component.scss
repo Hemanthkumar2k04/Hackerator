@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fdf6f2;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .reset-container {
+    background-color: #c0d8e3;
+    padding: 2rem;
+    align-items: center;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: -5px 4px 6px #a78d8a;
+    border-radius: 50px;
+    border-color: darkcyan;
+    border-style: solid;
+    border-width: 5px;
+  }
+  
+  h1 {
+    color: black;
+    padding: 5px;
+    line-height: 1.5;
+  }
+  
+  label {
+    font-size: 22px;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    font-size: larger;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    border-color: rgb(85, 212, 217);
+    box-shadow: 0 0 5px rgba(85, 212, 217, 0.5);
+  }
+  
+  /* Password Container */
+  .reset-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;     
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .password-container input {
+    padding-right: .75rem; /* Space for the icon */
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: 20px; /* Aligns icon to the right edge */
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s;
+  }
+  
+  .password-toggle:hover {
+    color: #0066cc;
+  }
+  
+  .password-toggle svg {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    width: 100%;
+    max-width: 300px;
+    height: 40px;
+    font-size: larger;
+    border-radius: 15px;
+    background-color: rgba(58, 140, 223, 0.7);
+    border: none;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  button:hover {
+    background-color: rgba(58, 141, 223, 0.535);
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #0066cc;
+    transition: color 0.3s;
+  }
+  
+  a:hover {
+    color: #004499;
+  }
+  

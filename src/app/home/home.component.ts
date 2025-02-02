@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SendpromptService } from '../sendprompt.service';
-
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -11,7 +13,7 @@ import { SendpromptService } from '../sendprompt.service';
   imports: [CommonModule, FormsModule]
 })
 export class HomeComponent {
-  constructor(private sendPrompt: SendpromptService) {}
+  constructor(private toaster: ToastrService, private sendPrompt: SendpromptService, private authService: AuthService, private router: Router) {}
 
   topics = [
     'Artificial Intelligence',
@@ -37,7 +39,7 @@ export class HomeComponent {
   projectIdea: string | null = null;
   researchPapers: { title: string, link: string }[] = [];
   isLoading = false;  // Add this line for loading state
-
+  credits = localStorage.getItem('credits');
   toggleSelection(topic: string): void {
     if (this.selectedTopics.includes(topic)) {
       this.removeTopic(topic);
@@ -53,13 +55,17 @@ export class HomeComponent {
   openCustomPrompt() {
     this.showCustomPrompt = !this.showCustomPrompt;
   }
-
+  onLogout(){
+    this.authService.logout();
+    this.toaster.success("Successfully Logged out!");
+    this.router.navigate(['login']);
+  }
   generateIdea(): void {
     if (this.selectedTopics.length === 0 && !this.customPrompt) {
       alert('Please select at least one topic or provide a custom prompt!');
       return;
     }
-  
+    this.projectIdea = null;
     this.isLoading = true;  // Set loading to true before API call
     const promptToSend = this.customPrompt || this.selectedTopics.toString();
     

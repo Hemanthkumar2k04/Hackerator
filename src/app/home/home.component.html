@@ -1,6 +1,7 @@
 <div class="container">
   <h2>Choose Your Project Topics</h2>
-  
+  <button class="logout-btn"type="submit" (click)="onLogout()">Logout</button>
+  <h3>Credits: {{credits}}</h3>
   <!-- Card for Topic Selection -->
   <div class="card">
     <h3>Select your topics</h3>
@@ -51,5 +52,6 @@
         <a [href]="paper.link" target="_blank">{{ paper.title }}</a>
       </li>
     </ul>
+    <button class="btn btn-success" (click)="generateIdea()">Regenerate Idea</button>
   </div>
 </div>

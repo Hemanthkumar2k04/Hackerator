@@ -1,0 +1,39 @@
+<body>
+  <div class="login-container">
+    <h1>Login To Continue!</h1>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
+      <label for="username">Username:</label>
+      <input id="username" type="text" formControlName="username" />
+      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        Username is required.
+      </div>
+
+      <!-- Password -->
+      <label for="password">Password:</label>
+      <div class="password-container">
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+        />
+        <span class="password-toggle" (click)="togglePasswordVisibility()">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="register-link">
+      <p>Don't have an account? <a [routerLink]="['/register']">Register</a></p>
+    </div>
+  </div>
+</body>
