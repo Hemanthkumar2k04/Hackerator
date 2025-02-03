@@ -41,6 +41,7 @@ export class HomeComponent {
   isLoading = false;  // Add this line for loading state
   credits = localStorage.getItem('credits');
   toggleSelection(topic: string): void {
+    this.showCustomPrompt = false;
     if (this.selectedTopics.includes(topic)) {
       this.removeTopic(topic);
     } else {
@@ -53,7 +54,8 @@ export class HomeComponent {
   }
 
   openCustomPrompt() {
-    this.showCustomPrompt = !this.showCustomPrompt;
+    this.showCustomPrompt = true;
+    this.selectedTopics = [];
   }
   onLogout(){
     this.authService.logout();
