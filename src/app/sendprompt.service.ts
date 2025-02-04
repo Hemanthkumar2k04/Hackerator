@@ -10,7 +10,7 @@ export class SendpromptService {
   
   constructor(private http: HttpClient) {}
 
-  sendPrompt(prompt: string): Observable<{ result: string }> {
-    return this.http.post<{ result: string }>(`${this.server_url}/generate`, { prompt });
+  sendPrompt(prompt: string, is_custom_prompt: boolean, username: string | null): Observable<{ result: string }> {
+    return this.http.post<{ result: string }>(`${this.server_url}/generate`, { prompt, is_custom_prompt, username });
   }
 }

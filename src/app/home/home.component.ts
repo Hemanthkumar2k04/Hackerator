@@ -39,6 +39,7 @@ export class HomeComponent {
   projectIdea: string | null = null;
   researchPapers: { title: string, link: string }[] = [];
   isLoading = false;  // Add this line for loading state
+  username = localStorage.getItem('username');
   credits = localStorage.getItem('credits');
   toggleSelection(topic: string): void {
     this.showCustomPrompt = false;
@@ -71,7 +72,7 @@ export class HomeComponent {
     this.isLoading = true;  // Set loading to true before API call
     const promptToSend = this.customPrompt || this.selectedTopics.toString();
     
-    this.sendPrompt.sendPrompt(promptToSend).subscribe({
+    this.sendPrompt.sendPrompt(promptToSend, !!this.customPrompt, this.username).subscribe({
       next: (response) => {
         this.projectIdea = this.formatProjectIdea(response.result);
         this.researchPapers = [
