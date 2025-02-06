@@ -1,58 +1,64 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, NgIf, RouterLink],
+  standalone: true, // Enables the use of imports in Angular v14+
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule], // FIXED
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'], // Fixed typo from styleUrl to styleUrls
+  styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit{
-  ngOnInit(): void {
-    localStorage.clear();
-  }
-  loginForm: FormGroup;
-  showPassword: Boolean = false;
+export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService, private router: Router, private toaster: ToastrService) {
-    // Define reactive form structure
+  loginForm: FormGroup;
+  showPassword: boolean = false;
+  isDarkMode: boolean = false;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toaster: ToastrService
+  ) {
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     });
+
+    this.isDarkMode = localStorage.getItem('darkMode') === 'true';
   }
-  togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password') as HTMLInputElement;
-    const eyeIcon = document.getElementById('eyeIcon');
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text';
-      eyeIcon?.setAttribute('stroke', '#0066cc'); // Change color (optional)
-    } else {
-      passwordInput.type = 'password';
-      eyeIcon?.setAttribute('stroke', '#888'); // Reset color
-    }
+
+  ngOnInit(): void {
+    localStorage.clear();
   }
-  
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('darkMode', String(this.isDarkMode));
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value; // Destructure form values
+      const { username, password } = this.loginForm.value;
+
       this.authService.login(username, password).subscribe({
         next: (response) => {
           localStorage.setItem('username', username);
           this.toaster.success('Login successful');
-          console.log('Login response:', response);
           this.router.navigate(['home']);
         },
         error: (error: HttpErrorResponse) => {
-          console.error('Login error:', error);
-          this.toaster.error(error.error.message || 'Login failed'); // Display error message
+          this.toaster.error(error.error.message || 'Login failed');
         },
       });
     } else {

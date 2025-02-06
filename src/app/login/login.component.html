@@ -1,28 +1,25 @@
-<body>
+<body [ngClass]="{ 'dark-mode': isDarkMode }">
   <div class="login-container">
     <h1>Login To Continue!</h1>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Username -->
-      <label for="username">Username:</label>
-      <input id="username" type="text" formControlName="username" />
+      <label for="username">Enter your username</label>
+      <input id="username" type="text" formControlName="username" placeholder="Enter your username" />
       <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
         Username is required.
       </div>
 
       <!-- Password -->
-      <label for="password">Password:</label>
+      <label for="password">Enter your password</label>
       <div class="password-container">
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-        />
+        <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+          placeholder="Enter your password" />
         <span class="password-toggle" (click)="togglePasswordVisibility()">
-          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z"/>
+              d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
           </svg>
         </span>
       </div>
@@ -33,7 +30,15 @@
 
     <!-- Register Link -->
     <div class="register-link">
-      <p>Don't have an account? <a [routerLink]="['/register']">Register</a></p>
+      <p>Don't have an account? <a routerLink="/register">Register</a></p>
+    </div>
+
+    <!-- Dark Mode Icon -->
+    <div class="theme-toggle-icon" (click)="toggleDarkMode()">
+      <img *ngIf="!isDarkMode" src="https://www.pngall.com/wp-content/uploads/5/Crescent-Moon-PNG-Picture.png"
+        alt="Sun Icon" class="theme-icon">
+      <img *ngIf="isDarkMode" src="https://www.freeiconspng.com/thumbs/sun-icon/sun-icon-26.png" alt="Moon Icon"
+        class="theme-icon">
     </div>
   </div>
 </body>
