@@ -46,12 +46,6 @@
   <div *ngIf="projectIdea" class="bg-white mt-4">
     <h5>Generated Project Idea</h5>
     <p [innerHTML]="projectIdea"></p>
-    <h6>Relevant Research Papers</h6>
-    <ul>
-      <li *ngFor="let paper of researchPapers">
-        <a [href]="paper.link" target="_blank">{{ paper.title }}</a>
-      </li>
-    </ul>
     <button class="btn btn-success" (click)="generateIdea()">Regenerate Idea</button>
   </div>
 </div>
