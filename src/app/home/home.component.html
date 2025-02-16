@@ -2,6 +2,7 @@
   <h2>Choose Your Project Topics</h2>
   <button class="logout-btn"type="submit" (click)="onLogout()">Logout</button>
   <h3>Credits: {{credits}}</h3>
+  <button type="submit" (click)="updateCredits(username, 300)">Regenerate Credits</button>
   <!-- Card for Topic Selection -->
   <div class="card">
     <h3>Select your topics</h3>
@@ -36,16 +37,19 @@
 
   <!-- Generate Button -->
   <div class="mt-4 generate-button-container">
-    <button class="btn btn-success" (click)="generateIdea()" [disabled]="isLoading">
+    <button class="btn btn-success" (click)="generateIdea()" [disabled]="isLoading" [disabled]="!canGenerate">
       <span *ngIf="!isLoading">Generate Project Idea</span>
       <div *ngIf="isLoading" class="spinner"></div>
-    </button>
+    </button><br>
+    <div *ngIf="!canGenerate">
+      <h3 style='color: red;'>Out of Credits</h3>
+    </div>
   </div>
 
   <!-- Results Area -->
   <div *ngIf="projectIdea" class="bg-white mt-4">
     <h5>Generated Project Idea</h5>
     <p [innerHTML]="projectIdea"></p>
-    <button class="btn btn-success" (click)="generateIdea()">Regenerate Idea</button>
+    <button class="btn btn-success" (click)="generateIdea()" [disabled]="!canGenerate">Regenerate Idea</button>
   </div>
 </div>

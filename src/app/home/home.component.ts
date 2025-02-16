@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SendpromptService } from '../sendprompt.service';
@@ -12,9 +12,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./home.component.scss'],
   imports: [CommonModule, FormsModule]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
+  credits: number = 0;
   constructor(private toaster: ToastrService, private sendPrompt: SendpromptService, private authService: AuthService, private router: Router) {}
-
+  ngOnInit(): void{
+    this.loadUserCredits(this.username);
+  }
   topics = [
     'Artificial Intelligence',
     'Blockchain',
@@ -39,8 +42,48 @@ export class HomeComponent {
   projectIdea: string | null = null;
   researchPapers: { title: string, link: string }[] = [];
   isLoading = false;  // Add this line for loading state
+  canGenerate = true;
   username = localStorage.getItem('username');
-  credits = localStorage.getItem('credits');
+
+  loadUserCredits(username: string | null): void {
+    if (username) {
+      this.authService.loadUserCredits(username).subscribe({
+        next: (credits) => {
+          this.credits = credits;
+          console.log(`${username}: ${credits}`);
+          if(this.credits < 20){
+            this.canGenerate = false;
+          }
+        },
+        error: (error) => {
+          console.error('Error loading user credits:', error);
+          // Handle the error appropriately, e.g., show a notification
+        },
+      });
+    } else {
+      console.warn('Username is not available.');
+    }
+  }
+
+  updateCredits(username: string| null, credits: number):void{
+    if(username){
+      this.authService.UpdateUserCredits(username, credits).subscribe({
+        next: (response) =>{
+          this.loadUserCredits(username);
+        },
+        error: (error) =>{
+          console.log(error);
+          
+        }
+      })
+    }
+  }
+
+  deductCredits(): void{
+    this.credits -= 20;
+    this.updateCredits(this.username, this.credits);
+  }
+
   toggleSelection(topic: string): void {
     this.showCustomPrompt = false;
     if (this.selectedTopics.includes(topic)) {
@@ -72,6 +115,8 @@ export class HomeComponent {
     this.isLoading = true;  // Set loading to true before API call
     const promptToSend = this.customPrompt || this.selectedTopics.toString();
     
+    
+
     this.sendPrompt.sendPrompt(promptToSend, !!this.customPrompt, this.username).subscribe({
       next: (response) => {
         this.projectIdea = this.formatProjectIdea(response.result);
@@ -81,6 +126,7 @@ export class HomeComponent {
           { title: 'Research Paper 3', link: 'https://link-to-research-paper.com/3' }
         ];
         this.isLoading = false;  // Set loading to false after response
+        this.deductCredits();
       },
       error: (error) => {
         console.error('Error generating idea:', error);

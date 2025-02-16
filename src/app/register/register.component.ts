@@ -45,7 +45,6 @@ export class RegisterComponent implements OnInit{
         this.toaster.success("Registration Successful!");
         localStorage.clear();
         localStorage.setItem('username', username);
-        localStorage.setItem('credits', "300");
         this.router.navigate(['home']);
       },
       error: (error: HttpErrorResponse) => {
