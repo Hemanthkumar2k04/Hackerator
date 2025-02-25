@@ -87,12 +87,7 @@ Whether you're struggling with brainstorming or need inspiration, Hackerator is 
 ---
 
 ## 📸 Screenshots
-![Screenshot from 2025-02-25 18-59-09](https://github.com/user-attachments/assets/90688073-87f6-406a-9cce-1d99292859ae)
-![Screenshot from 2025-02-25 18-59-19](https://github.com/user-attachments/assets/3c0aab61-1920-4213-8f0d-b30e4c04a623)
-![Screenshot from 2025-02-25 18-59-32](https://github.com/user-attachments/assets/559f7dfa-fa5c-47a3-ae69-a25d38eb0a44)
-![Screenshot from 2025-02-25 19-00-00](https://github.com/user-attachments/assets/e4233f53-a7d9-4bf6-bbd6-0fab73e0adea)
-![Screenshot from 2025-02-25 19-00-40](https://github.com/user-attachments/assets/56b7375f-c8fb-410e-b013-e22d648376ee)
-
+https://github.com/Hemanthkumar2k04/Hackerator/issues/1#issue-2878450559
 ---
 
 ## 🚀 Future Enhancements
