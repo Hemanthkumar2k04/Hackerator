@@ -87,8 +87,16 @@ Whether you're struggling with brainstorming or need inspiration, Hackerator is 
 ---
 
 ## 📸 Screenshots
-https://github.com/Hemanthkumar2k04/Hackerator/issues/1#issue-2878450559
----
+<p><b>1. Login Page UI: </b><br>
+Light theme: https://github.com/user-attachments/assets/6e1bc289-7a62-400a-869c-9bc03c78e04f <br>
+Dark theme: https://github.com/user-attachments/assets/dd45015e-210d-4284-b58c-433ae4eef309
+</p>
+<p><b>2. Registration Page UI:</b><br>
+https://github.com/user-attachments/assets/3f485aac-a4fc-465c-9e69-ddf8fe9e9a2f</p>
+<p><b>3. Selection Page UI:</b><br>
+https://github.com/user-attachments/assets/5d590d8b-7b03-4ce6-b3b1-073030e53968</p>
+<p><b>4. Generated Result Page UI:</b><br>
+https://github.com/user-attachments/assets/91feb74c-f9a3-47aa-b213-4a7be3e7417e</p>
 
 ## 🚀 Future Enhancements
 🔹 **Collaborative Brainstorming** - Share ideas with a team.  
