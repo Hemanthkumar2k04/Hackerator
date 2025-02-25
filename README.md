@@ -120,10 +120,4 @@ This project is open-source and available under the **MIT License**.
 
 ---
 
-## 📞 Contact & Support
-📧 Email: hemanthkumar2k04@gmail.com
-🐙 GitHub: [Check it out!](https://github.com/Hemanthkumar2k04)  
-
----
-
 🌟 **If you like this project, don't forget to ⭐ the repo!**
