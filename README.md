@@ -11,6 +11,12 @@ Hackerator is an innovative AI-driven tool designed to assist students in select
 Whether you're struggling with brainstorming or need inspiration, Hackerator is your **go-to AI companion** for ideation! 💡
 
 ---
+## 👥 Contributors
+- [Hemanthkumar](https://github.com/your-username) - **Backend & AI Integration**
+- [Iniyaa](https://github.com/Iniyaa21) - **Frontend Development**
+- [Gowsi](https://github.com/GowsiSM) - **UI/UX Design**
+
+---
 
 ## 🛠️ Tech Stack
 ### **Frontend** (User Interface)
