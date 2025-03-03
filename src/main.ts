@@ -19,7 +19,7 @@ import { AccountComponent } from './app/account/account.component';
 //   {path: 'account', component: AccountComponent}
 // ]
 const routes: Route[] = [
-  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path:'login', component: LoginComponent},
   {path:'home', component: HomeComponent},
   {path: 'register', component: RegisterComponent},

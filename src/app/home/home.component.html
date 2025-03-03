@@ -1,15 +1,19 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<div class="credits-container">
+  <h3>Credits: {{credits}}</h3>
+  <button type="submit" (click)="updateCredits(username, 300)" class="btn btn-outline-primary">Regenerate Credits</button>
+</div> 
 <div class="container">
   <h2>Choose Your Project Topics</h2>
   <button class="logout-btn"type="submit" (click)="onLogout()">Logout</button>
-  <h3>Credits: {{credits}}</h3>
-  <button type="submit" (click)="updateCredits(username, 300)">Regenerate Credits</button>
+  
   <!-- Card for Topic Selection -->
   <div class="card">
     <h3>Select your topics</h3>
     <div class="topic-grid">
       <button *ngFor="let topic of topics"
               [class.active]="selectedTopics.includes(topic)"
-              (click)="toggleSelection(topic)">
+              (click)="toggleSelection(topic)" class="button">
         {{ topic }}
       </button>
     </div>
