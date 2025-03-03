@@ -1,11 +1,11 @@
 <body [ngClass]="{ 'dark-mode': isDarkMode }">
   <div class="login-container">
-    <h1>Login To Continue!</h1>
+    <h1>Login To Continue</h1>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <!-- Username -->
       <label for="username">Enter your username</label>
-      <input id="username" type="text" formControlName="username" placeholder="Enter your username" />
-      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+      <input id="username" type="text" formControlName="username" placeholder="" />
+      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" style="color: red;">
         Username is required.
       </div>
 
@@ -13,7 +13,7 @@
       <label for="password">Enter your password</label>
       <div class="password-container">
         <input id="password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-          placeholder="Enter your password" />
+          placeholder="" />
         <span class="password-toggle" (click)="togglePasswordVisibility()">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

@@ -26,14 +26,14 @@ body {
   max-width: 350px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 15px;
-  border: 3px solid #eb5e28;
+  border: 3px solid #007BFF;
   transition: all 0.3s;
   margin: 0 auto;
 }
 
 .dark-mode .login-container {
   background-color: #252422;
-  border: 3px solid #eb5e28;
+  border: 3px solid #007BFF;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
 }
 
@@ -57,6 +57,10 @@ label {
   margin-top: 10px;
   text-align: left;
   color: #252422;
+  padding-bottom: 10px;
+}
+.dark-mode label{
+  color : white;
 }
 
 /* Input Fields */
@@ -65,7 +69,7 @@ input {
   max-width: 320px;
   padding: 0.75rem;
   margin-bottom: 10px;
-  border: 2px solid #eb5e28;
+  border: 2px solid #007BFF;
   border-radius: 10px;
   font-size: 16px;
   text-align: center;
@@ -75,7 +79,7 @@ input {
 }
 
 input:focus {
-  border-color: #eb5e28;
+  border-color: #007BFF;
   box-shadow: 0 0 8px rgba(255, 94, 40, 0.5);
 }
 
@@ -90,7 +94,7 @@ input:focus {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  background-color: #eb5e28;
+  background-color: #007BFF;
   transition: transform 0.3s ease;
 }
 
@@ -104,17 +108,17 @@ input:focus {
 }
 
 .dark-mode .theme-toggle-icon {
-  background-color: #eb5e28;
+  background-color: #007BFF;
 }
 
 .dark-mode input {
   background-color: #403d39;
   color: #fff;
-  border-color: #eb5e28;
+  border-color: #007BFF;
 }
 
 .dark-mode input:focus {
-  border-color: #eb5e28;
+  border-color: #007BFF;
   box-shadow: 0 0 8px rgba(255, 94, 40, 0.5);
 }
 
@@ -133,7 +137,7 @@ input:focus {
 }
 
 .password-toggle:hover {
-  color: #eb5e28;
+  color: #007BFF;
 }
 
 button {
@@ -141,7 +145,7 @@ button {
   padding: 10px;
   font-size: 18px;
   border-radius: 10px;
-  background-color: #eb5e28;
+  background-color: #007BFF;
   border: none;
   color: #fff;
   cursor: pointer;
@@ -153,7 +157,7 @@ button:hover {
 }
 
 button:disabled {
-  background-color: #ff4f1f;
+  background-color: #007BFF;
   cursor: not-allowed;
 }
 
@@ -162,7 +166,7 @@ button:disabled {
 }
 
 a {
-  color: #eb5e28;
+  color: #007BFF;
   text-decoration: none;
 }
 
