@@ -130,7 +130,7 @@ app.post("/generate", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const response = yield undici_1.default.fetch('http://localhost:11434/api/generate', {
             method: 'POST',
             body: JSON.stringify({
-                model: "llama3.2",
+                model: "llama3.2:3b",
                 prompt: finalPrompt,
                 max_tokens: 25,
                 num_ctx: 64

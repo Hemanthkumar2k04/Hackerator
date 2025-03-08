@@ -23,7 +23,7 @@ export class HomeComponent implements OnInit{
     'Blockchain',
     'Data Science',
     'Cloud Computing',
-    'Cybersecurity',
+    'Cyber Security',
     'Internet of Things',
     'Augmented Reality',
     'Virtual Reality',

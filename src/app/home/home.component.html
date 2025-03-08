@@ -1,7 +1,8 @@
+<div class="top-container">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
 <div class="credits-container">
   <h3>Credits: {{credits}}</h3>
-  <button type="submit" (click)="updateCredits(username, 300)" class="btn btn-outline-primary">Regenerate Credits</button>
+  <button type="submit" (click)="updateCredits(username, 300)" class="regenerate-cred-btn">Regenerate Credits</button>
 </div> 
 <div class="container">
   <h2>Choose Your Project Topics</h2>
@@ -50,10 +51,12 @@
     </div>
   </div>
 
-  <!-- Results Area -->
-  <div *ngIf="projectIdea" class="bg-white mt-4">
+  <!-- Results Area --> 
+  
+  <div *ngIf="projectIdea" class="response-box">
     <h5>Generated Project Idea</h5>
-    <p [innerHTML]="projectIdea"></p>
+    <p [innerHTML]="projectIdea" class="response-paragraph"></p>
     <button class="btn btn-success" (click)="generateIdea()" [disabled]="!canGenerate">Regenerate Idea</button>
   </div>
+</div>
 </div>

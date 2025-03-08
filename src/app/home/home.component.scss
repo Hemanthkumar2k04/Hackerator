@@ -1,3 +1,7 @@
+.top-container{
+  background-color: #0D1B2A; 
+  color: white; 
+}
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -7,6 +11,7 @@
 
 .credits-container{
   padding-left: 30px;
+  padding-top: 10px;
 }
 .credits-container h3{
   font-family: 'Montserrat', sans-serif;
@@ -20,7 +25,7 @@
 h2 {
   font-size: 100px;
   font-weight: bold;
-  color: #007BFF;
+  color: #007ACC;
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
@@ -30,7 +35,7 @@ h2 {
 }
 
 .card {
-  background-color: #f8f9fa;
+  background-color: #0D1B2A;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -46,26 +51,29 @@ h2 {
 }
 
 .button {
-  padding: 1em 2em;
+  background-color: #a8cbe6;
+  padding: 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-weight: bold;
   font-family: 'Montserrat', sans-serif;
   text-transform: uppercase;
   cursor: pointer;
-  color: #007BFF;
+  color: #007ACC;
   transition: all 700ms;
-  font-size: 15px;
+  font-size: 18px;
   position: relative;
   overflow: hidden;
-  outline: 2px solid #007BFF;
+  text-align: center;
+  outline: 2px solid #007ACC;
+  
 }
 
 .button:hover {
   color: #ffffff;
   transform: scale(1.1);
-  outline: 2px solid #007BFF;
-  box-shadow: 4px 5px 17px -4px #007BFF;
+  outline: 2px solid #007ACC;
+  box-shadow: 4px 5px 17px -4px #007ACC;
 }
 
 .button::before {
@@ -75,7 +83,7 @@ h2 {
   top: 0;
   width: 0;
   height: 100%;
-  background-color: #007BFF;
+  background-color: #007ACC;
   transform: skewX(45deg);
   z-index: -1;
   transition: width 700ms;
@@ -87,7 +95,7 @@ h2 {
 
 
 .selection-bar {
-  background-color: #e9ecef;
+  background-color: #0D1B2A;
   padding: 10px;
   border-radius: 5px;
   display: flex;
@@ -97,7 +105,8 @@ h2 {
 
 .badge {
   font-size: 1rem;
-  background-color: #007bff;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #007ACC;
   color: white;
   padding: 8px 12px;
   border-radius: 20px;
@@ -133,7 +142,7 @@ h2 {
     
     &:focus {
       outline: none;
-      border-color: #007bff;
+      border-color: #007ACC;
       box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
   }
@@ -148,17 +157,61 @@ h2 {
   font-size: 1.1rem;
   border-radius: 8px;
 }
+.regenerate-cred-btn{
+  display: inline-block;
+  position: relative;
+  width: 150px;
+  height: 50px;
+  font-weight: bolder;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 10px;
+  z-index: 9999;
+  color: white;
+  background: #007ACC;
+  border: 2px solid #007ACC;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+.regenerate-cred-btn:active {
+  box-shadow: inset 4px 4px 10px rgba(0, 90, 158, 0.5), inset -4px -4px 10px rgba(0, 122, 204, 0.5);
+}
+
+.regenerate-cred-btn:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transition: all 0.4s ease-in-out;
+  transform: translateX(-50%) scale(1);
+}
+
+.regenerate-cred-btn:hover {
+  color: white;
+  border: 2px solid #005A9E;
+  background: #005A9E;
+}
+
+.regenerate-cred-btn:hover:before {
+  top: -40%;
+  transform: translateX(-50%) scale(1.2);
+}
 
 .btn-outline-primary {
-  border-color: #007bff;
-  color: #007bff;
+  border-color: #007ACC;
+  color: #007ACC;
   padding: 10px 20px;
   font-size: 1.1rem;
   font-family: 'Montserrat', sans-serif;
   border-radius: 8px;
 
   &:hover {
-    background-color: #007bff;
+    background-color: #007ACC;
     color: white;
   }
 }
@@ -179,7 +232,7 @@ ul {
 
     a {
       font-size: 1.1rem;
-      color: #007bff;
+      color: #007ACC;
       text-decoration: none;
 
       &:hover {
@@ -211,6 +264,7 @@ ul {
   display: flex;
   align-items: center;
   gap: 15px;
+  padding-bottom: 30px;
   
   button {
     min-width: 180px;
@@ -238,23 +292,66 @@ ul {
   100% { transform: rotate(360deg); }
 }
 
-.logout-btn{
+.logout-btn {
   position: fixed;
-  width: 150px;
-  height: 50px;
   top: 40px;
   right: 40px;
+  width: 150px;
+  height: 50px;
   font-weight: bolder;
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   cursor: pointer;
   border-radius: 10px;
   z-index: 9999;
-  color: #007bff;
-  background-color: white;
-  border-color: #007bff;
-  &:hover {
-    background-color: #007bff;
-    color: white;
-  }
+  color: white;
+  background: #007ACC;
+  border: 2px solid #007ACC;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.logout-btn:active {
+  box-shadow: inset 4px 4px 10px rgba(0, 90, 158, 0.5), inset -4px -4px 10px rgba(0, 122, 204, 0.5);
+}
+
+.logout-btn:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transition: all 0.4s ease-in-out;
+  transform: translateX(-50%) scale(1);
+}
+
+.logout-btn:hover {
+  color: white;
+  border: 2px solid #005A9E;
+  background: #005A9E;
+}
+
+.logout-btn:hover:before {
+  top: -40%;
+  transform: translateX(-50%) scale(1.2);
+}
+.response-box{
+  background-color: #a8cbe6;
+  border: 5px solid #007ACC;
+  border-radius: 8px;
+}
+
+.response-paragraph{
+  padding: 20px;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: black;
+}
+h5{
+  font-family:'Montserrat', sans-serif;
+  font-size: 30px;
+  text-align: center;
+  color: black;
 }

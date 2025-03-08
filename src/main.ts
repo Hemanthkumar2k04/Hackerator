@@ -11,15 +11,8 @@ import { importProvidersFrom } from '@angular/core';
 import { AccountComponent } from './app/account/account.component';
 
 
-// const routes: Route[] = [
-//   {path: '', redirectTo: '/login', pathMatch: 'full'},
-//   {path:'login', component: LoginComponent},
-//   {path:'home', component: HomeComponent},
-//   {path: 'register', component: RegisterComponent},
-//   {path: 'account', component: AccountComponent}
-// ]
 const routes: Route[] = [
-  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path:'login', component: LoginComponent},
   {path:'home', component: HomeComponent},
   {path: 'register', component: RegisterComponent},

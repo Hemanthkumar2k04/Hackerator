@@ -137,7 +137,7 @@ app.post("/generate", async (req: Request, res: Response): Promise<void> => {
     const response = await undici.fetch('http://localhost:11434/api/generate', {
       method: 'POST',
       body: JSON.stringify({
-        model: "llama3.2",
+        model: "llama3.2:3b",
         prompt: finalPrompt,
         max_tokens: 25,
         num_ctx: 64
