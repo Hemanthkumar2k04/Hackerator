@@ -1,0 +1,29 @@
+.dashboard-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  margin: 2rem auto;
+  max-width: 1100px;
+  padding: 0 1rem;
+}
+
+.dashboard-card.wide {
+  grid-column: span 2;
+}
+
+.dashboard-card.tall {
+  min-height: 300px;
+}
+
+@media (max-width: 700px) {
+  .dashboard-card-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .dashboard-card.wide,
+  .dashboard-card.tall {
+    grid-column: span 1;
+    min-height: 180px;
+  }
+}

@@ -1,5 +1,6 @@
-/* Example: /src/css/stepone.css */
+/* Main container styles */
 .stepone-container,
+.steptwo-container,
 .big-form {
   max-width: 1200px;
   min-width: 320px;
@@ -7,42 +8,37 @@
   margin: 1.5rem auto;
   background: #23232b;
   border-radius: 14px;
-  padding: 3.5rem 2rem 2.5rem 2rem;
+  padding: 2.25rem 1.75rem 2.25rem 1.75rem;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12);
   color: #fff;
   box-sizing: border-box;
   font-family: 'JetBrains Mono', monospace;
 }
 
-.stepone-title {
+/* Titles and subtitles */
+.stepone-title, .steptwo-title {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
   letter-spacing: 1px;
 }
-
-.stepone-subtitle {
+.stepone-subtitle, .steptwo-subtitle {
   font-size: 1rem;
-  color: #bdbdbd;
-  margin-bottom: 1.5rem;
 }
-
 .stepone-desc {
   font-size: 1.1rem;
   margin-bottom: 2rem;
   color: #d1d5db;
 }
 
-.stepone-flex,
-.big-flex {
+/* Flex and card layouts */
+.stepone-flex, .big-flex {
   display: flex;
   align-items: flex-start;
   gap: 2.5rem;
   margin-bottom: 2.5rem;
 }
-
-.stepone-card,
-.big-card {
+.stepone-card, .big-card {
   flex: 1;
   background: #18181b;
   border-radius: 10px;
@@ -53,13 +49,13 @@
   box-sizing: border-box;
 }
 
+/* Labels and inputs */
 .stepone-label {
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: #fff;
 }
-
 .stepone-input,
 .stepone-textarea,
 .stepone-select {
@@ -76,14 +72,12 @@
   outline: none;
   transition: border 0.2s;
 }
-
 .stepone-textarea {
   min-height: 120px;
   padding: 1rem 1.2rem;
-  width: 100%;
-  box-sizing: border-box;
 }
 
+/* "Or" badge */
 .stepone-or-badge {
   align-self: center;
   background: #23232b;
@@ -96,12 +90,20 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.stepone-actions {
+/* Actions (button containers) */
+.stepone-actions,
+.steptwo-actions {
+  margin-top: 2rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.stepone-generate-btn {
+/* Buttons */
+.stepone-generate-btn,
+.stepone-generate-ideas-btn,
+.steptwo-regenerate-btn,
+.steptwo-continue-btn {
   background: #0070f3;
   color: #fff;
   font-weight: 700;
@@ -112,19 +114,47 @@
   cursor: pointer;
   transition: background 0.1s;
   margin-left: 0.5rem;
+  min-width: 160px; /* Adjust as needed for your button text/spinner */
+  transition: min-width 0.2s, padding 0.2s;
 }
-
-.stepone-generate-btn:hover {
+.stepone-generate-btn:hover,
+.stepone-generate-ideas-btn:hover,
+.steptwo-regenerate-btn:hover,
+.steptwo-continue-btn:hover {
   background: #005bb5;
 }
 
+.stepone-generate-btn .spinner,
+.stepone-generate-ideas-btn .spinner {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.stepone-back-btn,
+.steptwo-back-btn {
+  background: #23232b;
+  color: #fff;
+  border: 1.5px solid #444;
+  border-radius: 7px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.75rem 2.25rem;
+  cursor: pointer;
+  transition: background 0.18s, border 0.18s;
+}
+.stepone-back-btn:hover,
+.steptwo-back-btn:hover {
+  background: #18181b;
+  border-color: #0070f3;
+}
+
+/* Selected domains */
 .selected-domains-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin: 0.75rem 0 0.5rem 0;
 }
-
 .selected-domain-chip {
   background: #282830;
   color: #fff;
@@ -136,7 +166,6 @@
   gap: 0.5em;
   box-shadow: 0 1px 4px rgba(0,0,0,0.08);
 }
-
 .remove-domain-btn {
   background: none;
   border: none;
@@ -149,11 +178,11 @@
   border-radius: 50%;
   transition: background 0.15s;
 }
-
 .remove-domain-btn:hover {
   background: #2d2d36;
 }
 
+/* Ideas list */
 .ideas-list {
   list-style: none;
   padding: 0;
@@ -162,7 +191,6 @@
   flex-direction: column;
   gap: 1.2rem;
 }
-
 .idea-item {
   background: #18181b;
   border-radius: 8px;
@@ -171,29 +199,18 @@
   border: 2px solid transparent;
   transition: border 0.18s, background 0.18s;
 }
-
 .idea-item.selected {
   border: 2px solid #0070f3;
   background: #23232b;
 }
 
-.stepone-back-btn {
-  background: #23232b;
-  color: #fff;
-  border: 1.5px solid #444;
-  border-radius: 7px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 0.75rem 2.25rem;
-  cursor: pointer;
-  transition: background 0.18s, border 0.18s;
+/* Spinner */
+.spinner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5em;
 }
-
-.stepone-back-btn:hover {
-  background: #18181b;
-  border-color: #0070f3;
-}
-
 .spinner {
   display: inline-block;
   width: 1.2em;
@@ -204,13 +221,14 @@
   animation: spin 0.7s linear infinite;
   vertical-align: middle;
 }
-
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
+/* Responsive */
 @media (max-width: 900px) {
   .stepone-container,
+  .steptwo-container,
   .big-form {
     max-width: 98vw;
     padding: 2rem 0.5rem;
@@ -227,5 +245,117 @@
   .stepone-or-badge {
     align-self: center;
     margin: 1rem 0;
+  }
+}
+.finalstep-main {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #18181b;
+  padding: 2.5rem 0 3rem 0;
+}
+
+.finalstep-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+/* Make Description card wide and ETA card next to it */
+.finalstep-cardgrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 2.2rem;
+  width: 80vw;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.finalstep-card.wide:not(.second-row) { /* Description */
+  grid-column: 1 / span 1;
+  grid-row: 1;
+}
+.finalstep-card.eta:not(.second-row) { /* ETA */
+  grid-column: 2 / span 1;
+  grid-row: 1;
+}
+.finalstep-card.wide.second-row { /* Roadmap */
+  grid-column: 1 / span 1;
+  grid-row: 2;
+}
+.finalstep-card.eta.second-row { /* Tech Stack */
+  grid-column: 2 / span 1;
+  grid-row: 2;
+}
+/* Remaining cards full width below */
+.finalstep-card:not(.wide):not(.eta):not(.second-row) {
+  grid-column: 1 / span 2;
+}
+
+.finalstep-card {
+  background: #23232b;
+  border-radius: 18px;
+  border: 3.5px solid;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10), 0 1.5px 6px rgba(0,0,0,0.08);
+  padding: 2.2rem 1.6rem 1.6rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 220px;
+  transition: box-shadow 0.18s, transform 0.18s;
+  position: relative;
+  overflow: hidden;
+  margin: 0.5rem 0;
+  color: #fff;
+  font-size: 1.08rem;
+}
+
+.finalstep-card:hover {
+  box-shadow: 0 8px 36px rgba(0,0,0,0.18), 0 2.5px 10px rgba(0,0,0,0.10);
+  transform: translateY(-3px) scale(1.035);
+}
+
+.finalstep-card-label {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: #a3a3a3;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.finalstep-card-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.7rem;
+}
+
+.finalstep-card-desc {
+  font-size: 1.08rem;
+  color: #d1d5db;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  min-height: 2.5em;
+  white-space: pre-line;
+}
+
+@media (max-width: 900px) {
+  .finalstep-cardgrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 1.2rem;
+    width: 98vw;
+  }
+  .finalstep-card {
+    grid-column: auto !important;
+    grid-row: auto !important;
   }
 }

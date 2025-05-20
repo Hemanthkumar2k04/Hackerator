@@ -67,6 +67,7 @@ const StepOne: React.FC<StepOneProps> = ({
             className="stepone-select"
             onChange={handleDomainSelect}
             value=""
+            disabled={loading}
           >
             <option value="">Choose a domain</option>
             {DOMAIN_OPTIONS.filter(opt => !domains.includes(opt)).map(opt => (
@@ -84,6 +85,7 @@ const StepOne: React.FC<StepOneProps> = ({
                   className="remove-domain-btn"
                   onClick={() => handleRemoveDomain(idx)}
                   aria-label={`Remove ${domain}`}
+                  disabled={loading}
                 >
                   ×
                 </button>
@@ -99,6 +101,7 @@ const StepOne: React.FC<StepOneProps> = ({
             value={notes}
             onChange={e => setNotes(e.target.value)}
             rows={7}
+            disabled={loading}
           />
         </div>
         <div className="stepone-or-badge">or</div>
@@ -110,12 +113,13 @@ const StepOne: React.FC<StepOneProps> = ({
             value={idea}
             onChange={e => setIdea(e.target.value)}
             rows={12}
+            disabled={loading}
           />
         </div>
       </div>
       <div className="stepone-actions">
         <button
-          className="stepone-generate-btn"
+          className="stepone-generate-btn stepone-generate-ideas-btn"
           onClick={handleGenerate}
           disabled={loading || (!domains.length && !idea.trim())}
         >

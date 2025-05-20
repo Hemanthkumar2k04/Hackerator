@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import StepOne from '../components/StepOne';
 import StepTwo from '../components/StepTwo';
 import FinalStep from '../components/FinalStep';
@@ -53,6 +54,7 @@ const Generate: React.FC = () => {
   const [finalIdea, setFinalIdea] = useState<any>(null);
   const [loadingRegenerate, setLoadingRegenerate] = useState(false);
   const [loadingContinue, setLoadingContinue] = useState(false);
+  const [loadingGenerate, setLoadingGenerate] = useState(false);
 
   // Reset all generated/cached data when user changes input
   const resetGenerated = useCallback(() => {
@@ -81,11 +83,13 @@ const Generate: React.FC = () => {
     payload: { topics: string[]; notes: string; userIdea: string },
     force = false
   ) => {
-    setLoadingRegenerate(force); // Only true if regenerating
+    if (!force) setLoadingGenerate(true);
+    setLoadingRegenerate(force);
     setLoadingContinue(false);
+
     if (!force && lastPayload && isSamePayload(payload, lastPayload) && ideas.length > 0) {
       setStep(2);
-      setLoadingRegenerate(false);
+      setLoadingGenerate(false);
       return;
     }
     try {
@@ -103,6 +107,7 @@ const Generate: React.FC = () => {
     } catch (error) {
       console.error(error);
     } finally {
+      setLoadingGenerate(false);
       setLoadingRegenerate(false);
     }
   };
@@ -151,33 +156,59 @@ const Generate: React.FC = () => {
 
   return (
     <div>
-      {step === 1 && (
-        <StepOne
-          domains={domains}
-          setDomains={setDomains}
-          notes={notes}
-          setNotes={setNotes}
-          idea={idea}
-          setIdea={setIdea}
-          onGenerate={handleGenerate}
-          loading={loadingRegenerate || loadingContinue}
-        />
-      )}
-      {step === 2 && (
-        <StepTwo
-          ideas={ideas}
-          selected={selected}
-          setSelected={setSelected}
-          onNext={handleContinue}
-          onBack={() => setStep(1)}
-          onRegenerate={handleRegenerate}
-          loadingContinue={loadingContinue}
-          loadingRegenerate={loadingRegenerate}
-        />
-      )}
-      {step === 3 && finalIdea && (
-        <FinalStep finalIdea={finalIdea} onBack={() => setStep(2)} />
-      )}
+      <AnimatePresence mode="wait">
+        {step === 1 && (
+          <motion.div
+            key="step1"
+            initial={{ x: 0, opacity: 1 }}
+            exit={{ x: -100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <StepOne
+              domains={domains}
+              setDomains={setDomains}
+              notes={notes}
+              setNotes={setNotes}
+              idea={idea}
+              setIdea={setIdea}
+              onGenerate={handleGenerate}
+              loading={loadingGenerate}
+            />
+          </motion.div>
+        )}
+        {step === 2 && (
+          <motion.div
+            key="step2"
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -100, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <StepTwo
+              ideas={ideas}
+              selected={selected}
+              setSelected={setSelected}
+              onNext={handleContinue}
+              onBack={() => setStep(1)}
+              onRegenerate={handleRegenerate}
+              loadingContinue={loadingContinue}
+              loadingRegenerate={loadingRegenerate}
+            />
+          </motion.div>
+        )}
+        {step === 3 && finalIdea && (
+          <motion.div
+            key="step3"
+            initial={{ x: 100, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -100, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <FinalStep finalIdea={finalIdea} onBack={() => setStep(2)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

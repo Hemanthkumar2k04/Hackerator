@@ -20,7 +20,7 @@ const undici_1 = require("undici");
 const app = (0, express_1.default)();
 // Allow CORS from your frontend (adjust the origin as needed)
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5174", // Replace with your frontend URL/port
+    origin: "http://localhost:5173", // Replace with your frontend URL/port
     credentials: true,
 }));
 app.use(express_1.default.json());
