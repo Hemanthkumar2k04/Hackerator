@@ -1,0 +1,231 @@
+/* Example: /src/css/stepone.css */
+.stepone-container,
+.big-form {
+  max-width: 1200px;
+  min-width: 320px;
+  width: 95vw;
+  margin: 1.5rem auto;
+  background: #23232b;
+  border-radius: 14px;
+  padding: 3.5rem 2rem 2.5rem 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  color: #fff;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stepone-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.stepone-subtitle {
+  font-size: 1rem;
+  color: #bdbdbd;
+  margin-bottom: 1.5rem;
+}
+
+.stepone-desc {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #d1d5db;
+}
+
+.stepone-flex,
+.big-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stepone-card,
+.big-card {
+  flex: 1;
+  background: #18181b;
+  border-radius: 10px;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.stepone-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.stepone-input,
+.stepone-textarea,
+.stepone-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #23232b;
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  resize: none;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.stepone-textarea {
+  min-height: 120px;
+  padding: 1rem 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stepone-or-badge {
+  align-self: center;
+  background: #23232b;
+  color: #bdbdbd;
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.stepone-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.stepone-generate-btn {
+  background: #0070f3;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.75rem 2.25rem;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.1s;
+  margin-left: 0.5rem;
+}
+
+.stepone-generate-btn:hover {
+  background: #005bb5;
+}
+
+.selected-domains-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0.5rem 0;
+}
+
+.selected-domain-chip {
+  background: #282830;
+  color: #fff;
+  border-radius: 16px;
+  padding: 0.35em 1.1em 0.35em 0.9em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.remove-domain-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1.1em;
+  margin-left: 0.3em;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.remove-domain-btn:hover {
+  background: #2d2d36;
+}
+
+.ideas-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.idea-item {
+  background: #18181b;
+  border-radius: 8px;
+  padding: 1.2rem 1rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border 0.18s, background 0.18s;
+}
+
+.idea-item.selected {
+  border: 2px solid #0070f3;
+  background: #23232b;
+}
+
+.stepone-back-btn {
+  background: #23232b;
+  color: #fff;
+  border: 1.5px solid #444;
+  border-radius: 7px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.75rem 2.25rem;
+  cursor: pointer;
+  transition: background 0.18s, border 0.18s;
+}
+
+.stepone-back-btn:hover {
+  background: #18181b;
+  border-color: #0070f3;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2.5px solid #fff;
+  border-top: 2.5px solid #0070f3;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .stepone-container,
+  .big-form {
+    max-width: 98vw;
+    padding: 2rem 0.5rem;
+  }
+  .big-flex,
+  .stepone-flex {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .big-card,
+  .stepone-card {
+    padding: 1.5rem 0.75rem;
+  }
+  .stepone-or-badge {
+    align-self: center;
+    margin: 1rem 0;
+  }
+}
