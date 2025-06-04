@@ -2,17 +2,17 @@
 .stepone-container,
 .steptwo-container,
 .big-form {
-  max-width: 1200px;
+
   min-width: 320px;
-  width: 95vw;
+  width: 80vw;
   margin: 1.5rem auto;
   background: #23232b;
   border-radius: 14px;
   padding: 2.25rem 1.75rem 2.25rem 1.75rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-  color: #fff;
-  box-sizing: border-box;
+  box-sizing: border-box;  box-shadow: rgba(240, 65, 46, 0.848) -0px 0px, rgba(240, 65, 46, 0.703) -5px 5px, rgba(240, 65, 46, 0.641) -10px 10px, rgba(240, 65, 46, 0.58) -15px 15px;  color: #fff;
   font-family: 'JetBrains Mono', monospace;
+  margin-left: 10vw;
+  margin-right: auto;
 }
 
 /* Titles and subtitles */
@@ -22,6 +22,7 @@
   margin-bottom: 0.5rem;
   letter-spacing: 1px;
 }
+
 .stepone-subtitle, .steptwo-subtitle {
   font-size: 1rem;
 }
@@ -87,7 +88,7 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(170, 109, 109, 0.08);
 }
 
 /* Actions (button containers) */
@@ -266,50 +267,47 @@
   letter-spacing: 1px;
 }
 
-/* Make Description card wide and ETA card next to it */
-.finalstep-cardgrid {
+/* Card Rows */
+.finalstep-row {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: auto auto;
   gap: 2.2rem;
-  width: 80vw;
-  max-width: 1100px;
-  margin: 0 auto;
-  align-items: stretch;
+  margin-bottom: 2.2rem;
 }
 
-.finalstep-card.wide:not(.second-row) { /* Description */
-  grid-column: 1 / span 1;
-  grid-row: 1;
+.finalstep-row1 {
+  grid-template-columns: 2fr auto;
 }
-.finalstep-card.eta:not(.second-row) { /* ETA */
-  grid-column: 2 / span 1;
-  grid-row: 1;
+.finalstep-row2 {
+  grid-template-columns: 1fr 2fr;
 }
-.finalstep-card.wide.second-row { /* Roadmap */
-  grid-column: 1 / span 1;
-  grid-row: 2;
-}
-.finalstep-card.eta.second-row { /* Tech Stack */
-  grid-column: 2 / span 1;
-  grid-row: 2;
-}
-/* Remaining cards full width below */
-.finalstep-card:not(.wide):not(.eta):not(.second-row) {
-  grid-column: 1 / span 2;
+.finalstep-row3 {
+  grid-template-columns: 1fr 1fr;
+  width: 73.5rem;
 }
 
+@media (max-width: 900px) {
+  .finalstep-row {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+}
+
+/* Card Styles */
 .finalstep-card {
   background: #23232b;
   border-radius: 18px;
   border: 3.5px solid;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.10), 0 1.5px 6px rgba(0,0,0,0.08);
+  box-shadow:
+    0 2px 16px rgba(0,0,0,0.10),
+    0 1.5px 6px rgba(0,0,0,0.08),
+    0 0 16px 2px var(--card-glow, #38bdf8);
   padding: 2.2rem 1.6rem 1.6rem 1.6rem;
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 220px;
-  transition: box-shadow 0.18s, transform 0.18s;
+  transition: box-shadow 0.4s, transform 0.35s;
   position: relative;
   overflow: hidden;
   margin: 0.5rem 0;
@@ -345,17 +343,49 @@
   line-height: 1.5;
   min-height: 2.5em;
   white-space: pre-line;
+  max-width: 800px;
 }
 
-@media (max-width: 900px) {
-  .finalstep-cardgrid {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-    gap: 1.2rem;
-    width: 98vw;
-  }
-  .finalstep-card {
-    grid-column: auto !important;
-    grid-row: auto !important;
-  }
+.finalstep-row1 .finalstep-card.card-eta .finalstep-card-desc {
+  font-size: 2rem !important;
+  text-align: center;
+  color: #fff;
+  margin-top: 10px;
+}
+.finalstep-row1 .finalstep-card.card-eta {
+  width: 220px;
+  height: 220px;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: auto; /* push to right if needed */
+}
+.finalstep-row3 .finalstep-card {
+  min-height: unset;  font-size: 2rem;
+}
+
+.finalstep-save {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  transition: background 0.18s;
+}
+.finalstep-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.finalstep-save img {
+  display: inline-block;
 }

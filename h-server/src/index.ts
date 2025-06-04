@@ -3,7 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from "dotenv";
 import cors from "cors";
 import { fetch } from 'undici';
-
 const app = express();
 
 // Allow CORS from your frontend (adjust the origin as needed)
@@ -180,6 +179,49 @@ Notes / Constraints: "${finalPrompt}"
 // Basic health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK' });
+});
+
+// Supabase Auth Middleware
+async function requireSupabaseAuth(req: Request, res: Response, next: Function) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+     res.status(401).json({ error: "No authorization header" });
+     return;
+  }
+  const token = authHeader.split(' ')[1];
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user) {
+     res.status(401).json({ error: "Invalid or expired token" });
+  }
+  (req as any).user = user;
+  next();
+}
+
+app.post("/api/save-idea", requireSupabaseAuth, async (req: Request, res: Response) => {
+  try {
+    const user = (req as any).user;
+    const userId = user.id;
+
+    const { idea } = req.body;
+    if (!idea || !idea.id || !idea.name || !idea.text) {
+      res.status(400).json({ error: "Missing idea fields" });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("ideas")
+      .insert([{ id: idea.id, user_id: userId, name: idea.name, text: idea.text }]);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("Save idea error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.listen(PORT, () => {

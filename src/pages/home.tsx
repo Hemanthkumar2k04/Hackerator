@@ -1,7 +1,6 @@
 import React from 'react';
-import { SignInButton } from '@clerk/clerk-react';
 import '../css/home.css'; // Import the CSS file
-
+import { SignInButton } from '@clerk/clerk-react';
 const Home: React.FC = () => {
   return (
     <div className="home-container">
@@ -9,9 +8,9 @@ const Home: React.FC = () => {
       <p className="home-subtitle">
         The ultimate platform for hackers and innovators.
       </p>
-      <SignInButton>
-        <button className="home-signin-button">Get Started</button>
-      </SignInButton>
+        <SignInButton>
+                  <button className="home-signin-button">Get Started</button>
+        </SignInButton>
     </div>
   );
 };

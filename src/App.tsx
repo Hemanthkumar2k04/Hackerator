@@ -1,19 +1,18 @@
-import './App.css'
-import { SignedIn,SignedOut} from '@clerk/clerk-react'
+import { SignedIn, SignedOut} from '@clerk/clerk-react'
 import Navbar from './components/navbar'
 import Home from './pages/home'
 import Generate from './pages/generate'
-function App() {
 
+function App() {
   return (
     <>
-    <Navbar/>
-     <SignedOut>
+      <Navbar />
+      <SignedIn>
+        <Generate></Generate>
+      </SignedIn>
+      <SignedOut>
         <Home></Home>
-     </SignedOut>
-     <SignedIn>
-       <Generate></Generate>
-     </SignedIn>
+      </SignedOut>
     </>
   )
 }
