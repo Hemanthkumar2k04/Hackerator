@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CardProps } from './Card';
 import { useAuth } from "@clerk/clerk-react";
@@ -9,7 +9,6 @@ interface FinalStepProps {
   onBack: () => void;
 }
 
-// Define punchy border colors for each card
 const borderColors = [
   "#38bdf8", // Tech Stack
   "#a78bfa", // Description
@@ -19,7 +18,6 @@ const borderColors = [
   "#f472b6", // Time Estimate
 ];
 
-// Helper to map finalIdea to cards
 const getCardsFromFinalIdea = (idea: any): CardProps[] => [
   {
     label: "Description",
@@ -93,9 +91,6 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
   const row2 = [cards[2], cards[3]]; // Tech Stack, Roadmap
   const row3 = [cards[4], cards[5]]; // Challenges, Goals
 
-
-
-
   const { getToken } = useAuth();
 
   async function saveIdea() {
@@ -136,93 +131,158 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
   }
 
   return (
-    <div className="finalstep-main">
-      <h1 className="finalstep-title">{finalIdea.name}</h1>
+    <div className="w-full min-h-screen flex flex-col items-center bg-[#18181b] py-10">
+      <h1 className="text-4xl font-extrabold text-white mb-10 text-center">{finalIdea.name}</h1>
 
       {/* Row 1: Description (2/3) + ETA (1/3) */}
-      <div className="finalstep-row finalstep-row1">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-8">
         <AnimatePresence>
-          {row1.map((card, idx) => (
-            <motion.div
-              className={`finalstep-card ${card.className || ""}`}
-              key={card.label}
-              custom={idx}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={cardVariants}
-              style={{
-                borderColor: card.borderColor,
-                background: "#23232b",
-                color: "#fff",
-                '--card-glow': card.borderColor
-              } as React.CSSProperties}
-            >
-              <div className="finalstep-card-label">{card.label}</div>
-              <div className="finalstep-card-title">{card.title}</div>
-              <div className="finalstep-card-desc">
-                {Array.isArray(card.description) ? (
-                  <ul style={{ paddingLeft: 18, margin: 0 }}>
-                    {card.description.map((item: string, i: number) => (
-                      <li key={i} style={{ marginBottom: 4 }}>{item}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  card.description?.split("\n").map((line: string, i: number) => (
-                    <div key={i}>{line}</div>
-                  ))
-                )}
-              </div>
-            </motion.div>
-          ))}
+          <motion.div
+            className={`finalstep-card card-desc md:col-span-2 h-auto transition-transform duration-200 ease-in-out hover:scale-[1.07] hover:shadow-[0_0_32px_8px_${row1[0].borderColor}] bg-[#23232b] rounded-2xl border-4 p-8`}
+            key={row1[0].label}
+            custom={0}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={cardVariants}
+            style={{
+              borderColor: row1[0].borderColor,
+              color: "#fff",
+              boxShadow: `0 0 24px 4px ${row1[0].borderColor}`,
+              '--card-glow': row1[0].borderColor,
+              minWidth: "380px",
+            } as React.CSSProperties}
+          >
+            <div className="uppercase text-sm font-semibold tracking-wider mb-2 opacity-80">{row1[0].label}</div>
+            <div className="text-3xl font-extrabold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">{row1[0].title}</div>
+            <div className="text-base text-zinc-200 leading-relaxed">
+              {Array.isArray(row1[0].description) ? (
+                <ul className="pl-4 m-0 list-disc">
+                  {row1[0].description.map((item: string, i: number) => (
+                    <li key={i} className="mb-1">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                row1[0].description?.split("\n").map((line: string, i: number) => (
+                  <div key={i}>{line}</div>
+                ))
+              )}
+            </div>
+          </motion.div>
+           {/* ETA Card: Center contents */}
+      <motion.div
+        className={`finalstep-card card-eta md:col-span-1 h-auto flex flex-col items-center justify-center text-center transition-transform duration-200 ease-in-out hover:scale-[1.07] hover:shadow-[0_0_32px_8px_${row1[1].borderColor}] bg-[#23232b] rounded-2xl border-4 p-8`}
+        key={row1[1].label}
+        custom={1}
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        variants={cardVariants}
+        style={{
+          borderColor: row1[1].borderColor,
+          color: "#fff",
+          boxShadow: `0 0 24px 4px ${row1[1].borderColor}`,
+          '--card-glow': row1[1].borderColor,
+          minWidth: "280px",
+        } as React.CSSProperties}
+      >
+        <div className="uppercase text-sm font-semibold tracking-wider mb-2 opacity-80">{row1[1].label}</div>
+        <div className="text-3xl font-extrabold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">{row1[1].title}</div>
+        <div className="text-4xl text-zinc-200 leading-relaxed">
+          {Array.isArray(row1[1].description) ? (
+            <ul className="pl-4 m-0 list-disc">
+              {row1[1].description.map((item: string, i: number) => (
+                <li key={i} className="mb-1">{item}</li>
+              ))}
+            </ul>
+          ) : (
+            row1[1].description?.split("\n").map((line: string, i: number) => (
+              <div key={i}>{line}</div>
+            ))
+          )}
+        </div>
+      </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Row 2: Tech Stack (1/3) + Roadmap (2/3) */}
-      <div className="finalstep-row finalstep-row2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-8">
         <AnimatePresence>
-          {row2.map((card, idx) => (
-            <motion.div
-              className={`finalstep-card ${card.className || ""}`}
-              key={card.label}
-              custom={idx}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={cardVariants}
-              style={{
-                borderColor: card.borderColor,
-                background: "#23232b",
-                color: "#fff",
-                '--card-glow': card.borderColor
-              } as React.CSSProperties}
-            >
-              <div className="finalstep-card-label">{card.label}</div>
-              <div className="finalstep-card-title">{card.title}</div>
-              <div className="finalstep-card-desc">
-                {Array.isArray(card.description) ? (
-                  <ul style={{ paddingLeft: 18, margin: 0 }}>
-                    {card.description.map((item: string, i: number) => (
-                      <li key={i} style={{ marginBottom: 4 }}>{item}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  card.description?.split("\n").map((line: string, i: number) => (
-                    <div key={i}>{line}</div>
-                  ))
-                )}
-              </div>
-            </motion.div>
-          ))}
+          {/* Tech Stack Card: shorter height, normal width */}
+          <motion.div
+            className={`finalstep-card card-tech md:col-span-1 h-auto transition-transform duration-200 ease-in-out hover:scale-[1.07] hover:shadow-[0_0_32px_8px_${row2[0].borderColor}] bg-[#23232b] rounded-2xl border-4 p-8`}
+            key={row2[0].label}
+            custom={0}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={cardVariants}
+            style={{
+              borderColor: row2[0].borderColor,
+              color: "#fff",
+              boxShadow: `0 0 24px 4px ${row2[0].borderColor}`,
+              '--card-glow': row2[0].borderColor,
+              minWidth: "280px",
+            } as React.CSSProperties}
+          >
+            <div className="uppercase text-sm font-semibold tracking-wider mb-2 opacity-80">{row2[0].label}</div>
+            <div className="text-3xl font-extrabold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">{row2[0].title}</div>
+            <div className="text-base text-zinc-200 leading-relaxed">
+              {Array.isArray(row2[0].description) ? (
+                <ul className="pl-4 m-0 list-disc">
+                  {row2[0].description.map((item: string, i: number) => (
+                    <li key={i} className="mb-1">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                row2[0].description?.split("\n").map((line: string, i: number) => (
+                  <div key={i}>{line}</div>
+                ))
+              )}
+            </div>
+          </motion.div>
+          {/* Roadmap Card: wider, normal height */}
+          <motion.div
+            className={`finalstep-card card-roadmap md:col-span-2 h-auto transition-transform duration-200 ease-in-out hover:scale-[1.07] hover:shadow-[0_0_32px_8px_${row2[1].borderColor}] bg-[#23232b] rounded-2xl border-4 p-8`}
+            key={row2[1].label}
+            custom={1}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={cardVariants}
+            style={{
+              borderColor: row2[1].borderColor,
+              color: "#fff",
+              boxShadow: `0 0 24px 4px ${row2[1].borderColor}`,
+              '--card-glow': row2[1].borderColor,
+              minWidth: "500px",
+            } as React.CSSProperties}
+          >
+            <div className="uppercase text-sm font-semibold tracking-wider mb-2 opacity-80">{row2[1].label}</div>
+            <div className="text-3xl font-extrabold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">{row2[1].title}</div>
+            <div className="text-base text-zinc-200 leading-relaxed">
+              {Array.isArray(row2[1].description) ? (
+                <ul className="pl-4 m-0 list-disc">
+                  {row2[1].description.map((item: string, i: number) => (
+                    <li key={i} className="mb-1">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                row2[1].description?.split("\n").map((line: string, i: number) => (
+                  <div key={i}>{line}</div>
+                ))
+              )}
+            </div>
+          </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Row 3: Challenges (1/2) + Goals (1/2) */}
-      <div className="finalstep-row finalstep-row3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl mb-8">
         <AnimatePresence>
           {row3.map((card, idx) => (
             <motion.div
-              className={`finalstep-card ${card.className || ""}`}
+              className={`finalstep-card ${card.className || ""} h-auto transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-[0_0_32px_8px_${card.borderColor}] bg-[#23232b] rounded-2xl border-4 p-8`}
               key={card.label}
               custom={idx}
               initial="hidden"
@@ -231,18 +291,19 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
               variants={cardVariants}
               style={{
                 borderColor: card.borderColor,
-                background: "#23232b",
                 color: "#fff",
-                '--card-glow': card.borderColor
+                boxShadow: `0 0 24px 4px ${card.borderColor}`,
+                '--card-glow': card.borderColor,
+                minWidth: "340px",
               } as React.CSSProperties}
             >
-              <div className="finalstep-card-label">{card.label}</div>
-              <div className="finalstep-card-title">{card.title}</div>
-              <div className="finalstep-card-desc">
+              <div className="uppercase text-sm font-semibold tracking-wider mb-2 opacity-80">{card.label}</div>
+              <div className="text-2xl font-extrabold mb-4 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]">{card.title}</div>
+              <div className="text-base text-zinc-200 leading-relaxed p-2">
                 {Array.isArray(card.description) ? (
-                  <ul style={{ paddingLeft: 18, margin: 0 }}>
+                  <ul className="pl-4 m-0 list-disc">
                     {card.description.map((item: string, i: number) => (
-                      <li key={i} style={{ marginBottom: 4 }}>{item}</li>
+                      <li key={i} className="mb-1">{item}</li>
                     ))}
                   </ul>
                 ) : (
@@ -256,21 +317,13 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
         </AnimatePresence>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", marginTop: 32, gap: 16 }}>
+     
+
+      <div className="flex justify-center mt-8 gap-6">
         <button
-          className="finalstep-save"
+          className="finalstep-save flex items-center gap-2 bg-none border-none cursor-pointer text-lg font-semibold text-white px-4 py-2 rounded transition disabled:opacity-70"
           onClick={saveIdea}
           disabled={saving || saved}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: "none",
-            border: "none",
-            cursor: saving || saved ? "not-allowed" : "pointer",
-            fontSize: "1.1rem",
-            color: "#fff"
-          }}
         >
           <img
             src={saved ? "/yellow-star.svg" : "/white-star.svg"}
@@ -281,7 +334,10 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
           />
           {saved ? "Saved" : saving ? "Saving..." : "Save"}
         </button>
-        <button className="stepone-back-btn" onClick={onBack}>
+        <button
+          className="stepone-back-btn bg-zinc-800 text-white border border-zinc-600 rounded px-6 py-2 font-semibold hover:bg-zinc-700 transition"
+          onClick={onBack}
+        >
           Back
         </button>
       </div>

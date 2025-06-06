@@ -1,3 +1,11 @@
+/*
+  CardGrid.css
+  ------------
+  - Styles for the dashboard card grid layout (.dashboard-card-grid)
+  - Responsive adjustments for grid and card sizing
+*/
+
+/* --- Dashboard Card Grid Styles --- */
 .dashboard-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -8,6 +16,7 @@
   padding: 0 1rem;
 }
 
+/* --- Card Modifiers --- */
 .dashboard-card.wide {
   grid-column: span 2;
 }
@@ -16,6 +25,7 @@
   min-height: 300px;
 }
 
+/* --- Responsive Styles --- */
 @media (max-width: 700px) {
   .dashboard-card-grid {
     grid-template-columns: 1fr;

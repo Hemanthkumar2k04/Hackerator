@@ -1,3 +1,12 @@
+/* 
+  Card.css
+  ----------
+  - Dashboard Card styles: .dashboard-card, .dashboard-card-label, .dashboard-card-title, .dashboard-card-desc, .dashboard-card-meta
+  - Final Step Card styles: .finalstep-main, .finalstep-title, .finalstep-cardgrid, .finalstep-card, .finalstep-card-label, .finalstep-card-title, .finalstep-card-desc
+  - Responsive styles for Final Step
+*/
+
+/* --- Dashboard Card Styles --- */
 .dashboard-card {
   border-radius: 18px;
   box-shadow: 0 2px 16px rgba(0,0,0,0.07), 0 1.5px 6px rgba(0,0,0,0.04);
@@ -58,6 +67,7 @@
   gap: 0.5em;
 }
 
+/* --- Final Step Card Styles --- */
 .finalstep-main {
   width: 100vw;
   min-height: 100vh;
@@ -134,6 +144,7 @@
   white-space: pre-line;
 }
 
+/* --- Responsive Styles for Final Step --- */
 @media (max-width: 900px) {
   .finalstep-cardgrid {
     grid-template-columns: 1fr;

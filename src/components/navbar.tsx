@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import '../css/navbar.css';
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from '@clerk/clerk-react';
 

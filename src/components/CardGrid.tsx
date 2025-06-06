@@ -1,4 +1,3 @@
-import React from "react";
 import Card from "./Card";
 import type { CardProps } from "./Card";
 import { FaStar, FaChartLine, FaCheckCircle, FaBolt } from "react-icons/fa";

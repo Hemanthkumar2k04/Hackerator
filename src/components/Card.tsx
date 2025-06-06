@@ -1,4 +1,3 @@
-import React from "react";
 import "../css/Card.css";
 
 export interface CardProps {
