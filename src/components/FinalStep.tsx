@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CardProps } from './Card';
-import { useAuth } from "@clerk/clerk-react";
-import { v4 as uuidv4 } from 'uuid';
+import {useUser, useAuth } from "@clerk/clerk-react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL!,
+  import.meta.env.VITE_SUPABASE_ANON_KEY!
+);
 
 interface FinalStepProps {
   finalIdea: any;
@@ -92,43 +97,64 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
   const row3 = [cards[4], cards[5]]; // Challenges, Goals
 
   const { getToken } = useAuth();
-
+  const {user} = useUser();
   async function saveIdea() {
-    setSaving(true);
-    try {
-      const ideaText = [
-        `Project Name: ${finalIdea.name}`,
-        `Summary: ${finalIdea.summary}`,
-        `Description: ${finalIdea.description}`,
-        `Tech Stack: ${(finalIdea.tech_stack || []).join(', ')}`,
-        `Roadmap: ${(finalIdea.roadmap || []).join('; ')}`,
-        `Challenges: ${(finalIdea.extras?.challenges || []).join('; ')}`,
-        `Stretch Goals: ${(finalIdea.extras?.stretch_goals || []).join('; ')}`,
-        `Time Estimate: ${finalIdea.extras?.time_estimate || ''}`
-      ].join('\n');
-  
-      const payload = {
-        id: uuidv4(),
-        name: finalIdea.name,
-        text: ideaText
-      };
-  
-      const token: string | null = await getToken();
-      await fetch("http://localhost:5000/api/save-idea", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+  setSaving(true);
+  try {
+    const token = await getToken({ template: "supabase" });
+
+    const client = createClient(
+      import.meta.env.VITE_SUPABASE_URL!,
+      import.meta.env.VITE_SUPABASE_ANON_KEY!,
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-        body: JSON.stringify({ idea: payload }),
-      });
-      setSaved(true);
-    } catch (error) {
-      // Optionally handle error
-    } finally {
-      setSaving(false);
+      }
+    );
+
+    const ideaText = [
+      `Project Name: ${finalIdea.name}`,
+      `Summary: ${finalIdea.summary}`,
+      `Description: ${finalIdea.description}`,
+      `Tech Stack: ${(finalIdea.tech_stack || []).join(', ')}`,
+      `Roadmap: ${(finalIdea.roadmap || []).join('; ')}`,
+      `Challenges: ${(finalIdea.extras?.challenges || []).join('; ')}`,
+      `Stretch Goals: ${(finalIdea.extras?.stretch_goals || []).join('; ')}`,
+      `Time Estimate: ${finalIdea.extras?.time_estimate || ''}`
+    ].join('\n');
+
+    if (!user || !user.id) {
+      throw new Error("User is not authenticated.");
     }
+
+
+    console.log("Inserting:", {
+        user_name: user.id,
+        idea_name: finalIdea.name,
+        idea: ideaText
+    });
+
+
+    const { data, error } = await client.from("saved_ideas").insert([
+  {
+    id: undefined,
+    user_name: "HK"
   }
+]);
+
+    
+
+    if (error) throw error;
+    setSaved(true);
+  } catch (error) {
+    console.error("Save failed:", error);
+  } finally {
+    setSaving(false);
+  }
+}
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center bg-[#18181b] py-10">

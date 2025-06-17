@@ -4,14 +4,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { fetch } from 'undici';
 const app = express();
+import jwt from 'jsonwebtoken';
 
-// Allow CORS from your frontend (adjust the origin as needed)
 app.use(cors({
-  origin: "http://localhost:5173", // Replace with your frontend URL/port
+  origin: "http://localhost:5173",
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
@@ -167,12 +169,15 @@ Notes / Constraints: "${finalPrompt}"
       const data = JSON.parse(responseText);
       console.log(data);
       res.json({data});
+      return;
     }catch(error){
       res.status(500).json({error: error});
+      return;
     }
   } catch (error){
     console.log(error);
     res.status(500).json({error: "Internal server error"});
+    return;
   }
 });
 
@@ -181,47 +186,31 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
-// Supabase Auth Middleware
-async function requireSupabaseAuth(req: Request, res: Response, next: Function) {
+app.post("/api/save-idea", async (req, res) => {
   const authHeader = req.headers.authorization;
+
   if (!authHeader) {
-     res.status(401).json({ error: "No authorization header" });
-     return;
+    res.status(401).json({ error: "Missing auth header" });
+    return;
   }
-  const token = authHeader.split(' ')[1];
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user) {
-     res.status(401).json({ error: "Invalid or expired token" });
-  }
-  (req as any).user = user;
-  next();
-}
 
-app.post("/api/save-idea", requireSupabaseAuth, async (req: Request, res: Response) => {
-  try {
-    const user = (req as any).user;
-    const userId = user.id;
+  const token = authHeader.split(" ")[1];
+  const decoded: any = jwt.decode(token); // For production, verify the token signature
 
-    const { idea } = req.body;
-    if (!idea || !idea.id || !idea.name || !idea.text) {
-      res.status(400).json({ error: "Missing idea fields" });
-      return;
-    }
+  const clerkUserId = decoded.sub;
+  const email = decoded.email;
 
-    const { data, error } = await supabase
-      .from("ideas")
-      .insert([{ id: idea.id, user_id: userId, name: idea.name, text: idea.text }]);
+  const { ideaJson } = req.body;
 
-    if (error) {
-      res.status(500).json({ error: error.message });
-      return;
-    }
+  // Insert into Supabase or DB
+  const { data, error } = await supabase
+    .from("saved_ideas")
+    .insert([{ user_id: clerkUserId, idea: ideaJson }]);
 
-    res.json({ success: true, data });
-  } catch (err) {
-    console.error("Save idea error:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  if (error) {res.status(500).json({ error: error.message }); return;};
+
+  res.json({ success: true, data });
+  return;
 });
 
 app.listen(PORT, () => {

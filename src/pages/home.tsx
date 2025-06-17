@@ -53,7 +53,7 @@ const Home: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.1, type: "spring" }}
         >
-          <SignInButton>
+          <SignInButton mode='modal'>
             <button className="px-6 py-3 text-lg text-white bg-blue-600 rounded transition-colors hover:bg-blue-800 font-semibold">
               Get Started
             </button>

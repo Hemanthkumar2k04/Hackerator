@@ -18,9 +18,9 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const undici_1 = require("undici");
 const app = (0, express_1.default)();
-// Allow CORS from your frontend (adjust the origin as needed)
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173", // Replace with your frontend URL/port
+    origin: "http://localhost:5173",
     credentials: true,
 }));
 app.use(express_1.default.json());
@@ -165,59 +165,45 @@ Notes / Constraints: "${finalPrompt}"
             const data = JSON.parse(responseText);
             console.log(data);
             res.json({ data });
+            return;
         }
         catch (error) {
             res.status(500).json({ error: error });
+            return;
         }
     }
     catch (error) {
         console.log(error);
         res.status(500).json({ error: "Internal server error" });
+        return;
     }
 }));
 // Basic health check endpoint
 app.get('/health', (req, res) => {
     res.json({ status: 'OK' });
 });
-// Supabase Auth Middleware
-function requireSupabaseAuth(req, res, next) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            res.status(401).json({ error: "No authorization header" });
-            return;
-        }
-        const token = authHeader.split(' ')[1];
-        const { data: { user }, error } = yield supabase.auth.getUser(token);
-        if (error || !user) {
-            res.status(401).json({ error: "Invalid or expired token" });
-        }
-        req.user = user;
-        next();
-    });
-}
-app.post("/api/save-idea", requireSupabaseAuth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const user = req.user;
-        const userId = user.id;
-        const { idea } = req.body;
-        if (!idea || !idea.id || !idea.name || !idea.text) {
-            res.status(400).json({ error: "Missing idea fields" });
-            return;
-        }
-        const { data, error } = yield supabase
-            .from("ideas")
-            .insert([{ id: idea.id, user_id: userId, name: idea.name, text: idea.text }]);
-        if (error) {
-            res.status(500).json({ error: error.message });
-            return;
-        }
-        res.json({ success: true, data });
+app.post("/api/save-idea", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.status(401).json({ error: "Missing auth header" });
+        return;
     }
-    catch (err) {
-        console.error("Save idea error:", err);
-        res.status(500).json({ error: "Internal server error" });
+    const token = authHeader.split(" ")[1];
+    const decoded = jsonwebtoken_1.default.decode(token); // For production, verify the token signature
+    const clerkUserId = decoded.sub;
+    const email = decoded.email;
+    const { ideaJson } = req.body;
+    // Insert into Supabase or DB
+    const { data, error } = yield supabase
+        .from("saved_ideas")
+        .insert([{ user_id: clerkUserId, idea: ideaJson }]);
+    if (error) {
+        res.status(500).json({ error: error.message });
+        return;
     }
+    ;
+    res.json({ success: true, data });
+    return;
 }));
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

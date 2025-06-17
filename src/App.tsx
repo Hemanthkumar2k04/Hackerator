@@ -4,6 +4,7 @@ import Home from './pages/home'
 import Generate from './pages/generate'
 
 function App() {
+
   return (
     <>
       <Navbar />

@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
       <div className="navbar-logo">Hackerator</div>
       <div className="navbar-signin">
         <SignedOut>
-          <SignInButton>
+          <SignInButton mode='modal'>
             <button className="navbar-signin-button">Sign In</button>
           </SignInButton>
         </SignedOut>
@@ -38,6 +38,7 @@ const Navbar: React.FC = () => {
               aria-label="Account menu"
             >
               <img src="/account.svg" alt="My Account" />
+              
             </button>
             {menuOpen && (
               <div className="navbar-dropdown">
