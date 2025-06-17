@@ -1,54 +1,42 @@
-# React + TypeScript + Vite
+📌 About the Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hackerator is a full-stack, AI-powered idea generator designed to help students, developers, and hackathon participants generate well-structured project ideas based on selected domains or user-provided input.
 
-Currently, two official plugins are available:
+Instead of manually crafting detailed AI prompts, Hackerator simplifies the process: users select one or more domains (e.g., AI, FinTech, Web3) or enter their own idea, and the system generates relevant, one-line project suggestions. After selecting a topic, the app expands it into a full idea breakdown including the tech stack, description, roadmap, challenges, stretch goals, and estimated time.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+    🎥 Demo Video Here
+    (replace with your actual video link)
 
-## Expanding the ESLint configuration
+⚙️ Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    Frontend: React, TypeScript, Tailwind CSS
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+    Backend: Express.js, Node.js
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    Authentication: Clerk
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    Database: Supabase (with Row Level Security & JWT integration)
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+    LLM Integration:
+
+        🔹 Development: Gemma 3 via Ollama (local inference)
+
+        🔹 Production-ready: Designed to support OpenAI's ChatGPT API, Claude, or any other cloud-based LLM via prompt switching and API abstraction
+
+    Prompt Engineering: Server-side dynamic prompt generation based on user flow
+
+🚧 Project Status
+
+This project is actively under development. While the core functionality is in place, the following areas are still being refined:
+
+    Idea saving and retrieval per authenticated user
+
+    Responsive UI/UX polish
+
+    Finalizing production-grade API switch and environment configuration
+
+🙌 Purpose and Vision
+
+Hackerator was built to solve a simple but frustrating problem: “I know the domain, but I don’t know what to build.” This tool removes that creative barrier and delivers structured, actionable project ideas powered by AI.
+
+Beyond solving that user pain point, the project is also a practical learning initiative — exploring everything from modern frontend frameworks to secure backend integration, local LLMs, and flexible architecture that supports switching AI providers without changing the core system.
