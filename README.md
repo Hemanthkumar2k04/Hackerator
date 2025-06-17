@@ -5,7 +5,9 @@ Hackerator is a full-stack, AI-powered idea generator designed to help students,
 Instead of manually crafting detailed AI prompts, Hackerator simplifies the process: users select one or more domains (e.g., AI, FinTech, Web3) or enter their own idea, and the system generates relevant, one-line project suggestions. After selecting a topic, the app expands it into a full idea breakdown including the tech stack, description, roadmap, challenges, stretch goals, and estimated time.
 
     🎥 Demo Video Here
-    (replace with your actual video link)
+
+https://github.com/user-attachments/assets/a3dc9e76-2b27-4e23-aa75-788578435325
+
 
 ⚙️ Technology Stack
 
