@@ -183,27 +183,48 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK' });
 });
 app.post("/api/save-idea", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        res.status(401).json({ error: "Missing auth header" });
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).json({ error: "Missing auth header" });
+            return;
+        }
+        const token = authHeader.split(" ")[1];
+        const decoded = jsonwebtoken_1.default.decode(token); // or use jwt.verify if you want to validate
+        const clerkUserId = decoded === null || decoded === void 0 ? void 0 : decoded.sub;
+        const email = decoded === null || decoded === void 0 ? void 0 : decoded.email;
+        if (!clerkUserId || !email) {
+            res.status(400).json({ error: "Invalid token structure" });
+            return;
+        }
+        const { idea_name, idea } = req.body;
+        console.log({
+            user_id: clerkUserId,
+            user_name: email,
+            idea_name: idea_name,
+            idea: idea
+        });
+        const { data, error } = yield supabase.from("saved_ideas").insert([
+            { user_id: clerkUserId.toString(),
+                user_name: email,
+                idea_name: idea_name,
+                idea: idea }
+        ]).select();
+        if (error) {
+            console.error("Supabase insert error:", error);
+            {
+                res.status(500).json({ error: error.message });
+                return;
+            }
+        }
+        res.json({ success: true, data });
         return;
     }
-    const token = authHeader.split(" ")[1];
-    const decoded = jsonwebtoken_1.default.decode(token); // For production, verify the token signature
-    const clerkUserId = decoded.sub;
-    const email = decoded.email;
-    const { ideaJson } = req.body;
-    // Insert into Supabase or DB
-    const { data, error } = yield supabase
-        .from("saved_ideas")
-        .insert([{ user_id: clerkUserId, idea: ideaJson }]);
-    if (error) {
-        res.status(500).json({ error: error.message });
+    catch (err) {
+        console.error("Backend error:", err);
+        res.status(500).json({ error: "Internal server error" });
         return;
     }
-    ;
-    res.json({ success: true, data });
-    return;
 }));
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

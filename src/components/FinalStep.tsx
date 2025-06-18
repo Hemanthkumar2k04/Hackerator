@@ -103,18 +103,6 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
   try {
     const token = await getToken({ template: "supabase" });
 
-    const client = createClient(
-      import.meta.env.VITE_SUPABASE_URL!,
-      import.meta.env.VITE_SUPABASE_ANON_KEY!,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      }
-    );
-
     const ideaText = [
       `Project Name: ${finalIdea.name}`,
       `Summary: ${finalIdea.summary}`,
@@ -126,35 +114,28 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
       `Time Estimate: ${finalIdea.extras?.time_estimate || ''}`
     ].join('\n');
 
-    if (!user || !user.id) {
-      throw new Error("User is not authenticated.");
-    }
+    const payload = {
+      idea_name: finalIdea.name,
+      idea: ideaText
+    };
 
-
-    console.log("Inserting:", {
-        user_name: user.id,
-        idea_name: finalIdea.name,
-        idea: ideaText
+    await fetch("http://localhost:5000/api/save-idea", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}` // ✅ send Clerk token
+      },
+      body: JSON.stringify(payload)
     });
 
-
-    const { data, error } = await client.from("saved_ideas").insert([
-  {
-    id: undefined,
-    user_name: "HK"
-  }
-]);
-
-    
-
-    if (error) throw error;
     setSaved(true);
-  } catch (error) {
-    console.error("Save failed:", error);
+  } catch (err) {
+    console.error("Save failed:", err);
   } finally {
     setSaving(false);
   }
 }
+
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center bg-[#18181b] py-10">
