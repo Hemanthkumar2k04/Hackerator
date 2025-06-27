@@ -5,7 +5,6 @@ import cors from "cors";
 import { fetch } from 'undici';
 const app = express();
 import jwt from 'jsonwebtoken';
-import { log } from 'console';
 
 app.use(cors({
   origin: "http://localhost:5173",

@@ -1,65 +1,55 @@
 import { SignInButton } from '@clerk/clerk-react';
-import { motion } from 'framer-motion';
 
-const NAVBAR_HEIGHT = 74; // px, adjust if your navbar is taller/shorter
+const NAVBAR_HEIGHT = 80; // px, adjust if needed
 
 const Home: React.FC = () => {
   return (
     <div
-      className="relative w-screen flex flex-col justify-center items-center text-center font-sans bg-black overflow-hidden"
-      style={{ minHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
+      className="relative flex min-h-screen flex-col bg-[#221112] overflow-x-hidden"
+      style={{ fontFamily: 'Inter, Noto Sans, sans-serif',
+              maxHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`
+       }}
     >
-      {/* Animated Background image */}
-      <motion.img
-        src="../home.jpg"
-        alt="Background"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      />
-      {/* Animated Overlay for darkening the image */}
-      <motion.div
-        className="absolute inset-0  z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, delay: 0.2 }}
-      />
-      {/* Animated Content */}
-      <motion.div
-        className="relative z-20 flex flex-col items-center"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.5, type: "spring" }}
-      >
-        <motion.h1
-          className="text-5xl text-white font-bold mb-4"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.7, type: "spring" }}
-        >
-          Welcome to Hackerator
-        </motion.h1>
-        <motion.p
-          className="text-2xl text-white mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9, type: "spring" }}
-        >
-          The ultimate platform for hackers and innovators.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.1, type: "spring" }}
-        >
-          <SignInButton mode='modal'>
-            <button className="px-6 py-3 text-lg text-white bg-blue-600 rounded transition-colors hover:bg-blue-800 font-semibold">
-              Get Started
-            </button>
-          </SignInButton>
-        </motion.div>
-      </motion.div>
+
+      {/* Hero Section */}
+      <main className="px-4 md:px-40 flex flex-1 justify-center py-5 items-center">
+        <div className="flex flex-col max-w-[960px] flex-1">
+          <div className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4 rounded-lg"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYtgHjFFPbB4PdP-rNln1vaIHiMWIfsxBbAL0In5cyEGG7JiyupSHFKmYdO5QNipQ48BayoJCcmKMv65qwJ5Bx8m1e-dZW_QYCO8O1qR6TrN6VobjRroiPOxioiMBAOEiKTh3wid38SQPy56ffw1v3OxnZ2oHSZhPBYX9qpobJdSoXViwQxQVxuI_3wXQFhEMjuAe-LHYG8JvsUo0xpnDk1obAgHINf_yANkGQkqaFS1G0eStIsiXv1spPCzXs9RNeicQj-IgSGknp")'
+            }}
+          >
+            <div className="flex flex-col gap-2 text-center">
+              <h1 className="text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">
+                Unlock Your Next Big Idea
+              </h1>
+              <h2 className="text-white text-sm md:text-base font-normal">
+                Hackerator generates innovative project ideas and detailed reports, helping you bring your vision to life.
+              </h2>
+            </div>
+            <SignInButton mode="modal">
+              <button className="flex min-w-[84px] h-10 md:h-12 px-4 md:px-5 items-center justify-center rounded-lg bg-[#ea2832] text-white text-sm md:text-base font-bold tracking-[0.015em] mt-4 cursor-pointer hover:bg-[#d71f26] transition-colors duration-200">
+                <span className="truncate">Get Started</span>
+              </button>
+            </SignInButton>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="flex justify-center">
+        <div className="flex max-w-[960px] flex-1 flex-col">
+          <div className="flex flex-col gap-6 px-5 py-10 text-center">
+            <div className="flex flex-wrap items-center justify-center gap-6">
+              <a className="text-[#c89295] text-base font-normal min-w-40" href="#">Terms of Service</a>
+              <a className="text-[#c89295] text-base font-normal min-w-40" href="#">Privacy Policy</a>
+              <a className="text-[#c89295] text-base font-normal min-w-40" href="#">Contact Us</a>
+            </div>
+            <p className="text-[#c89295] text-base font-normal">© 2024 Hackerator. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
