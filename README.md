@@ -6,7 +6,11 @@ Instead of manually crafting detailed AI prompts, Hackerator simplifies the proc
 
     🎥 Demo Video Here
 
-https://github.com/user-attachments/assets/a3dc9e76-2b27-4e23-aa75-788578435325
+
+
+https://github.com/user-attachments/assets/cec92986-0b19-46c4-874a-ac60c71299b8
+
+
 
 
 ⚙️ Technology Stack
@@ -31,7 +35,7 @@ https://github.com/user-attachments/assets/a3dc9e76-2b27-4e23-aa75-788578435325
 
 This project is actively under development. While the core functionality is in place, the following areas are still being refined:
 
-    Idea saving and retrieval per authenticated user
+    Idea retrieval per authenticated user
 
     Responsive UI/UX polish
 
@@ -42,3 +46,10 @@ This project is actively under development. While the core functionality is in p
 Hackerator was built to solve a simple but frustrating problem: “I know the domain, but I don’t know what to build.” This tool removes that creative barrier and delivers structured, actionable project ideas powered by AI.
 
 Beyond solving that user pain point, the project is also a practical learning initiative — exploring everything from modern frontend frameworks to secure backend integration, local LLMs, and flexible architecture that supports switching AI providers without changing the core system.
+
+Things you'd need incase you're cloning this:
+-> Supabase URL
+-> Supabase Anon key
+-> Clerk publishable key
+
+Put them in .env or .env.local file in the directory!
