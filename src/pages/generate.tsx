@@ -5,25 +5,128 @@ import StepTwo from '../components/StepTwo';
 import FinalStep from '../components/FinalStep';
 import '../css/form.css';
 
-function extractIdeasFromResponse(data: any): { topic: string; idea: string }[] {
+interface IdeaResponse {
+  topic: string;
+  idea: string;
+}
+
+interface TogetherAIResponse {
+  data: {
+    success: boolean;
+    ideas?: IdeaResponse[];
+    raw?: string;
+    message?: {
+      content: string;
+    };
+  };
+  prompt: string;
+}
+
+function extractIdeasFromResponse(data: TogetherAIResponse | any): IdeaResponse[] {
   try {
-    const content: string = data?.data?.message?.content || '';
-    const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
-    const jsonString = jsonMatch ? jsonMatch[1] : content;
-    const parsed = JSON.parse(jsonString);
-    return parsed.ideas || [];
+    // Handle the new Together AI response structure
+    if (data?.data?.ideas && Array.isArray(data.data.ideas)) {
+      return data.data.ideas.filter((idea: any) => 
+        idea && typeof idea.topic === 'string' && typeof idea.idea === 'string'
+      );
+    }
+    
+    // Handle raw response
+    if (data?.data?.raw) {
+      const parsed = JSON.parse(data.data.raw);
+      if (parsed.ideas && Array.isArray(parsed.ideas)) {
+        return parsed.ideas.filter((idea: any) => 
+          idea && typeof idea.topic === 'string' && typeof idea.idea === 'string'
+        );
+      }
+    }
+    
+    // Fallback for old format
+    const content: string = data?.data?.message?.content || data?.data?.raw || '';
+    if (content) {
+      const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : content;
+      const parsed = JSON.parse(jsonString);
+      
+      if (parsed.ideas && Array.isArray(parsed.ideas)) {
+        return parsed.ideas.filter((idea: any) => 
+          idea && typeof idea.topic === 'string' && typeof idea.idea === 'string'
+        );
+      }
+    }
+    
+    return [];
+    
   } catch (e) {
+    console.error('Error extracting ideas:', e);
     return [];
   }
 }
 
-function extractFinalIdea(data: any) {
+interface ProjectData {
+  success: boolean;
+  name: string;
+  summary: string;
+  description: string;
+  tech_stack: string[];
+  roadmap: string[];
+  extras: {
+    challenges: string[];
+    stretch_goals: string[];
+    time_estimate: string;
+  };
+}
+
+interface ProjectResponse {
+  data: ProjectData;
+  raw?: string;
+}
+
+function extractFinalIdea(data: ProjectResponse | any): ProjectData | null {
   try {
+    // Handle the new Together AI response structure
+    if (data?.data && typeof data.data === 'object') {
+      // Validate required fields
+      const projectData = data.data;
+      if (projectData.success && 
+          projectData.name && 
+          projectData.summary && 
+          projectData.description &&
+          Array.isArray(projectData.tech_stack) &&
+          Array.isArray(projectData.roadmap) &&
+          projectData.extras) {
+        return projectData;
+      }
+    }
+    
+    // Handle raw response parsing
+    if (data?.raw) {
+      const jsonMatch = data.raw.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : data.raw;
+      const parsed = JSON.parse(jsonString);
+      
+      // Validate parsed data
+      if (parsed.success && parsed.name && parsed.summary) {
+        return parsed;
+      }
+    }
+    
+    // Legacy format fallback
     const content: string = data?.data?.message?.content || '';
-    const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
-    const jsonString = jsonMatch ? jsonMatch[1] : content;
-    return JSON.parse(jsonString);
+    if (content) {
+      const jsonMatch = content.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : content;
+      const parsed = JSON.parse(jsonString);
+      
+      if (parsed.success && parsed.name) {
+        return parsed;
+      }
+    }
+    
+    return null;
+    
   } catch (e) {
+    console.error('Error extracting final idea:', e);
     return null;
   }
 }
@@ -99,6 +202,7 @@ const Generate: React.FC = () => {
         body: JSON.stringify(payload),
       });
       const data = await response.json();
+      console.log('Response from server:', data);
       const extractedIdeas = extractIdeasFromResponse(data);
       setIdeas(extractedIdeas);
       setLastPayload(payload);
