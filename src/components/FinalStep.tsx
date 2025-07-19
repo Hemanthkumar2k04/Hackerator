@@ -119,7 +119,7 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
       idea: ideaText
     };
 
-    await fetch("http://localhost:5000/api/save-idea", {
+    await fetch("https://hackerator-backend.onrender.com/api/save-idea", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

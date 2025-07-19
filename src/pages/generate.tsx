@@ -196,7 +196,7 @@ const Generate: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/generate-idea-list', {
+      const response = await fetch('https://hackerator-backend.onrender.com/generate-idea-list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -238,7 +238,7 @@ const Generate: React.FC = () => {
 
     setLoadingContinue(true);
     try {
-      const response = await fetch('http://localhost:5000/generate-idea', {
+      const response = await fetch('https://hackerator-backend.onrender.com/generate-idea', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
