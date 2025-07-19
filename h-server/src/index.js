@@ -27,7 +27,7 @@ const together_ai_1 = __importDefault(require("together-ai"));
 const app = (0, express_1.default)();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
+    origin: "https://hackerator.onrender.com",
     credentials: true,
 }));
 app.use(express_1.default.json());

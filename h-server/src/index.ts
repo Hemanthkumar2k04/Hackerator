@@ -8,7 +8,7 @@ const app = express();
 import jwt from 'jsonwebtoken';
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://hackerator.onrender.com",
   credentials: true,
 }));
 
