@@ -29,6 +29,8 @@ https://github.com/user-attachments/assets/cec92986-0b19-46c4-874a-ac60c71299b8
 
         🔹 Production-ready: Designed to support OpenAI's ChatGPT API, Claude, or any other cloud-based LLM via prompt switching and API abstraction
 
+        🔹 Currently using Together-AI API 
+
     Prompt Engineering: Server-side dynamic prompt generation based on user flow
 
 🚧 Project Status

@@ -31,10 +31,15 @@ const SavedIdeas = () => {
   if (!user) return <div>Please sign in to view your saved ideas.</div>;
   if (loading) return <div>Loading...</div>;
   if (ideas.length === 0) return <div>No saved ideas yet.</div>;
+  ideas.map((idea) =>  {
+    console.log(typeof idea.id);
+    
+  });
+  
   
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Your Saved Ideas</h2>
+    <div className="text-white">
+      <h2 className="text-xl font-bold mb-4 text-white">Your Saved Ideas</h2>
       <div className="space-y-4">
         {ideas.map((idea) => (
           <SavedIdeaItem key={idea.id} idea={idea} />

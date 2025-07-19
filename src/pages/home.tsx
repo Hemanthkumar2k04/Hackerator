@@ -5,7 +5,7 @@ const NAVBAR_HEIGHT = 80; // px, adjust if needed
 const Home: React.FC = () => {
   return (
     <div
-      className="relative flex min-h-screen flex-col bg-[#221112] overflow-x-hidden"
+      className="relative flex min-h-screen flex-col bg-black overflow-x-hidden"
       style={{ fontFamily: 'Inter, Noto Sans, sans-serif',
               maxHeight: `calc(100vh - ${NAVBAR_HEIGHT}px)`
        }}
@@ -13,8 +13,8 @@ const Home: React.FC = () => {
 
       {/* Hero Section */}
       <main className="px-4 md:px-40 flex flex-1 justify-center py-5 items-center">
-        <div className="flex flex-col max-w-[960px] flex-1">
-          <div className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4 rounded-lg"
+        <div className="flex flex-col max-w-[960px] flex-1 aniamte-bounce">
+          <div className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4 rounded-lg shadow-lg"
             style={{
               backgroundImage:
                 'linear-gradient(rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYtgHjFFPbB4PdP-rNln1vaIHiMWIfsxBbAL0In5cyEGG7JiyupSHFKmYdO5QNipQ48BayoJCcmKMv65qwJ5Bx8m1e-dZW_QYCO8O1qR6TrN6VobjRroiPOxioiMBAOEiKTh3wid38SQPy56ffw1v3OxnZ2oHSZhPBYX9qpobJdSoXViwQxQVxuI_3wXQFhEMjuAe-LHYG8JvsUo0xpnDk1obAgHINf_yANkGQkqaFS1G0eStIsiXv1spPCzXs9RNeicQj-IgSGknp")'
@@ -46,7 +46,7 @@ const Home: React.FC = () => {
               <a className="text-[#c89295] text-base font-normal min-w-40" href="#">Privacy Policy</a>
               <a className="text-[#c89295] text-base font-normal min-w-40" href="#">Contact Us</a>
             </div>
-            <p className="text-[#c89295] text-base font-normal">© 2024 Hackerator. All rights reserved.</p>
+            <p className="text-[#c89295] text-base font-normal">© 2025 Hackerator.</p>
           </div>
         </div>
       </footer>

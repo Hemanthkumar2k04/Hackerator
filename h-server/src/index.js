@@ -8,6 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -16,7 +23,7 @@ const express_1 = __importDefault(require("express"));
 const supabase_js_1 = require("@supabase/supabase-js");
 const dotenv_1 = __importDefault(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
-const undici_1 = require("undici");
+const together_ai_1 = __importDefault(require("together-ai"));
 const app = (0, express_1.default)();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 app.use((0, cors_1.default)({
@@ -33,6 +40,8 @@ const supabaseKey = process.env.SUPABASE_ANON_KEY || 'your-supabase-key';
 const supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
 // Generate idea list endpoint
 app.post("/generate-idea-list", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, e_1, _b, _c;
+    var _d, _e, _f, _g;
     const { topics, notes, userIdea } = req.body;
     console.log(`Topics: ${topics}\nNote: ${notes}\nUser Prompt: ${userIdea}`);
     if ((!topics || !Array.isArray(topics) || topics.length === 0) &&
@@ -67,41 +76,86 @@ Rules:
         prompt += `\nAdditional notes: "${notes}"`;
     }
     try {
-        console.log(prompt);
-        const ollamaResponse = yield (0, undici_1.fetch)("http://localhost:11434/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "gemma3:4b",
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-                stream: false
-            })
+        // console.log(prompt);
+        let str = "";
+        const together = new together_ai_1.default({
+            apiKey: process.env.TOGETHER_API_KEY || 'your-together-api-key',
         });
-        if (!ollamaResponse.ok) {
-            const errorText = yield ollamaResponse.text();
-            throw new Error(`Ollama API error: ${ollamaResponse.status} - ${errorText}`);
-        }
-        const responseText = yield ollamaResponse.text();
+        // First Together AI call (streaming)
+        const resp = yield together.chat.completions.create({
+            messages: [
+                { role: "system", content: "You are an AI that helps generate hackathon project ideas." },
+                { role: "user", content: prompt }
+            ],
+            model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+            stream: true,
+        });
         try {
-            const data = JSON.parse(responseText);
+            for (var _h = true, resp_1 = __asyncValues(resp), resp_1_1; resp_1_1 = yield resp_1.next(), _a = resp_1_1.done, !_a; _h = true) {
+                _c = resp_1_1.value;
+                _h = false;
+                const chunk = _c;
+                // use process.stdout.write instead of console.log to avoid newlines
+                if ((_e = (_d = chunk.choices[0]) === null || _d === void 0 ? void 0 : _d.delta) === null || _e === void 0 ? void 0 : _e.content) {
+                    str += chunk.choices[0].delta.content;
+                }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (!_h && !_a && (_b = resp_1.return)) yield _b.call(resp_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        // Second Together AI call (non-streaming) - replacing Ollama
+        const togetherResponse = yield together.chat.completions.create({
+            messages: [
+                { role: "user", content: prompt }
+            ],
+            model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free", // or use a different model if needed
+            stream: false,
+            temperature: 0.7,
+            max_tokens: 1000
+        });
+        // Extract the response content
+        const responseContent = (_g = (_f = togetherResponse.choices[0]) === null || _f === void 0 ? void 0 : _f.message) === null || _g === void 0 ? void 0 : _g.content;
+        if (!responseContent) {
+            throw new Error("No response content received from Together AI");
+        }
+        // Try to parse as JSON (if your prompt expects JSON response)
+        try {
+            const data = JSON.parse(responseContent);
             console.log(data);
             res.json({ data, prompt });
         }
         catch (parseError) {
+            // If it's not JSON, return the raw response
             res.json({
                 success: false,
-                message: "Ollama did not return valid JSON",
-                raw: responseText
+                message: "Together AI did not return valid JSON",
+                raw: responseContent
             });
         }
     }
     catch (err) {
-        console.error("Ollama API error:", err);
-        if (err.message && err.message.includes("ECONNREFUSED")) {
-            res.status(503).json({
-                error: "Cannot connect to Ollama server. Is it running on port 11434?"
+        console.error("Together AI error:", err);
+        // Handle different types of errors
+        if (err.message && err.message.includes("API key")) {
+            res.status(401).json({
+                error: "Invalid or missing Together AI API key"
+            });
+            return;
+        }
+        if (err.message && err.message.includes("rate limit")) {
+            res.status(429).json({
+                error: "Rate limit exceeded. Please try again later."
+            });
+            return;
+        }
+        if (err.message && err.message.includes("timeout")) {
+            res.status(504).json({
+                error: "Request timeout. Please try again."
             });
             return;
         }
@@ -110,12 +164,11 @@ Rules:
 }));
 // Generate single idea endpoint
 app.post("/generate-idea", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     const { idea, finalPrompt } = req.body;
     const prompt = `
 You are an AI assistant that generates detailed hackathon project blueprints.
-
 Based on the user's idea and constraints, respond ONLY in the following JSON format:
-
 {
   "success": true,
   "name": "<Project Name>",
@@ -133,47 +186,80 @@ Based on the user's idea and constraints, respond ONLY in the following JSON for
     "time_estimate": "<Estimated time to complete MVP (e.g., '12–16 hours')>"
   }
 }
-
 Rules:
 - Always include all fields in the JSON, even if you infer or estimate them.
 - Do not add any explanation or commentary — return only the JSON.
-- Adapt the content to match any constraints or notes provided by the user (e.g., “Only use Python”, “No Firebase”, etc.).
-
+- Adapt the content to match any constraints or notes provided by the user (e.g., "Only use Python", "No Firebase", etc.).
 User Input:
 Project Idea: "${idea}"
 Notes / Constraints: "${finalPrompt}"
-
 `;
     try {
-        const ollamaResponse = yield (0, undici_1.fetch)("http://localhost:11434/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "gemma3:4b",
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-                stream: false
-            })
+        const together = new together_ai_1.default({
+            apiKey: process.env.TOGETHER_API_KEY || 'your-together-api-key',
         });
-        if (!ollamaResponse.ok) {
-            res.status(500).json({ error: "Couldnt generate content" });
+        const togetherResponse = yield together.chat.completions.create({
+            messages: [
+                { role: "system", content: "You are an AI assistant that generates detailed hackathon project blueprints. Respond only in valid JSON format." },
+                { role: "user", content: prompt }
+            ],
+            model: "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free",
+            stream: false,
+            temperature: 0.7,
+            max_tokens: 2000
+        });
+        // Extract the response content
+        const responseContent = (_b = (_a = togetherResponse.choices[0]) === null || _a === void 0 ? void 0 : _a.message) === null || _b === void 0 ? void 0 : _b.content;
+        if (!responseContent) {
+            res.status(500).json({ error: "No response content received from Together AI" });
             return;
         }
-        const responseText = yield ollamaResponse.text();
         try {
-            const data = JSON.parse(responseText);
-            console.log(data);
+            // Try to parse the response as JSON
+            let data;
+            // Check if response is wrapped in code blocks
+            const jsonMatch = responseContent.match(/```json\s*([\s\S]*?)\s*```/);
+            const jsonString = jsonMatch ? jsonMatch[1] : responseContent;
+            data = JSON.parse(jsonString);
+            // Validate that required fields are present
+            if (!data.success || !data.name || !data.summary) {
+                throw new Error("Response missing required fields");
+            }
+            console.log("Generated project data:", data);
             res.json({ data });
             return;
         }
-        catch (error) {
-            res.status(500).json({ error: error });
+        catch (parseError) {
+            console.error("JSON parsing error:", parseError);
+            console.error("Raw response:", responseContent);
+            res.status(500).json({
+                error: "Failed to parse response as JSON",
+                raw: responseContent
+            });
             return;
         }
     }
     catch (error) {
-        console.log(error);
+        console.error("Together AI error:", error);
+        // Handle different types of errors
+        if (error.message && error.message.includes("API key")) {
+            res.status(401).json({
+                error: "Invalid or missing Together AI API key"
+            });
+            return;
+        }
+        if (error.message && error.message.includes("rate limit")) {
+            res.status(429).json({
+                error: "Rate limit exceeded. Please try again later."
+            });
+            return;
+        }
+        if (error.message && error.message.includes("timeout")) {
+            res.status(504).json({
+                error: "Request timeout. Please try again."
+            });
+            return;
+        }
         res.status(500).json({ error: "Internal server error" });
         return;
     }
