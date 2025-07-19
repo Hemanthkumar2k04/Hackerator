@@ -69,8 +69,21 @@ const cardVariants = {
     }
   })
 };
+type IdeaType = {
+  name: string;
+  summary: string;
+  description: string;
+  tech_stack: string[];
+  roadmap: string[];
+  extras: {
+    challenges: string[];
+    stretch_goals: string[];
+    time_estimate: string;
+  };
+};
 
-const SavedIdeaItem = ({ idea }) => {
+
+const SavedIdeaItem = ({ idea } : {idea: IdeaType}) => {
   const [expanded, setExpanded] = useState(false);
 
   if (!idea) return null;

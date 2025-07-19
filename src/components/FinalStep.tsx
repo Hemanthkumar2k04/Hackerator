@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CardProps } from './Card';
-import {useUser, useAuth } from "@clerk/clerk-react";
-import { createClient } from "@supabase/supabase-js";
+import {useAuth } from "@clerk/clerk-react";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL!,
-  import.meta.env.VITE_SUPABASE_ANON_KEY!
-);
 
 interface FinalStepProps {
   finalIdea: any;
@@ -97,7 +92,7 @@ const FinalStep: React.FC<FinalStepProps> = ({ finalIdea, onBack }) => {
   const row3 = [cards[4], cards[5]]; // Challenges, Goals
 
   const { getToken } = useAuth();
-  const {user} = useUser();
+
   async function saveIdea() {
   setSaving(true);
   try {
