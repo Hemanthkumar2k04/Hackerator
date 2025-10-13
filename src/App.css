@@ -1,0 +1,72 @@
+/* Glowing border animation that pulses around each box */
+:root {
+  --glow-duration: 1.5s; /* how long each box glows */
+  --total-cycle: calc(var(--glow-duration) * 3); /* total time for all 3 boxes */
+}
+
+@keyframes border-glow {
+  0% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0),
+                0 0 0 rgba(16, 185, 129, 0),
+                inset 0 0 0 rgba(16, 185, 129, 0);
+  }
+  10% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6),
+                0 0 40px rgba(16, 185, 129, 0.4),
+                inset 0 0 20px rgba(16, 185, 129, 0.1);
+  }
+  33.333% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0),
+                0 0 0 rgba(16, 185, 129, 0),
+                inset 0 0 0 rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(16, 185, 129, 0),
+                0 0 0 rgba(16, 185, 129, 0),
+                inset 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes border-glow-dark {
+  0% {
+    box-shadow: 0 0 0 rgba(52, 211, 153, 0),
+                0 0 0 rgba(52, 211, 153, 0),
+                inset 0 0 0 rgba(52, 211, 153, 0);
+  }
+  10% {
+    box-shadow: 0 0 20px rgba(52, 211, 153, 0.6),
+                0 0 40px rgba(52, 211, 153, 0.4),
+                inset 0 0 20px rgba(52, 211, 153, 0.1);
+  }
+  33.333% {
+    box-shadow: 0 0 0 rgba(52, 211, 153, 0),
+                0 0 0 rgba(52, 211, 153, 0),
+                inset 0 0 0 rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(52, 211, 153, 0),
+                0 0 0 rgba(52, 211, 153, 0),
+                inset 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+.light-beam-border {
+  position: relative;
+  animation: border-glow var(--total-cycle) ease-in-out infinite;
+}
+
+.dark .light-beam-border {
+  animation: border-glow-dark var(--total-cycle) ease-in-out infinite;
+}
+
+/* Stagger so each box glows one after another - box 2 starts when box 1 ends */
+.light-beam-border:nth-child(1) { animation-delay: 0s; }
+.light-beam-border:nth-child(2) { animation-delay: var(--glow-duration); }
+.light-beam-border:nth-child(3) { animation-delay: calc(var(--glow-duration) * 2); }
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .light-beam-border {
+    animation: none;
+  }
+}
