@@ -62,7 +62,7 @@ export function Home() {
           {/* Hero Section */}
           <div className="mb-8 max-w-4xl text-center">
             <h1 className="mb-3 text-4xl font-bold leading-tight text-foreground md:text-5xl lg:text-6xl">
-              Unleash Your Next Big Idea with <span className="text-emerald-500">I</span>dea<span className="text-emerald-500">F</span>orge.
+              Unleash Your Next Big Idea with <span className="text-emerald-500">H</span>ackerator.
             </h1>
             <p className="text-base text-muted-foreground md:text-lg">
               Spark creativity, generate concepts, and bring your visions to life.
@@ -119,7 +119,7 @@ export function Home() {
         </main>
 
         <footer className="mt-auto border-t border-border bg-background/95 backdrop-blur-md px-4 py-4 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} IdeaForge. All rights reserved.
+          &copy; {new Date().getFullYear()} Hackerator. All rights reserved.
         </footer>
       </div>
 

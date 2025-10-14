@@ -1,6 +1,6 @@
 # Supabase Database Setup
 
-This directory contains SQL scripts for setting up the database schema for IdeaForge.
+This directory contains SQL scripts for setting up the database schema for Hackerator.
 
 ## Setup Instructions
 

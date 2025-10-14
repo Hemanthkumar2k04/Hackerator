@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Logo from "@/assets/IdeaForge.svg"
+import Logo from "@/assets/Hackerator.svg"
 
 import {
   BookmarkIcon,
@@ -42,10 +42,10 @@ export default function Navbar() {
         <div className="flex flex-1 items-center gap-2">
           {/* Brand/Logo */}
           <a href="/" className="flex items-center gap-2">
-            <img src={Logo} alt="IdeaForge" className="h-20 w-auto" />
+            <img src={Logo} alt="Hackerator" className="h-20 w-auto" />
           </a>
           {/* App name - only show when logged in */}
-          <span className="font-bold text-lg md:text-xl"><span className="text-emerald-500">I</span>dea<span className="text-emerald-500">F</span>orge</span>
+          <span className="font-bold text-lg md:text-xl"><span className="text-emerald-500">H</span>ackerator</span>
           
           {/* Mobile menu trigger - only show when logged in */}
           {user && (
