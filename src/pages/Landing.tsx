@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button'
 import ThemeSquares from '../components/ThemeSquares'
 import AuthModal from '../components/AuthModal'
 import { useAuth } from '../contexts/AuthContext'
-
+import Logo from '@/assets/IdeaForge.svg'
 export default function Landing() {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
     const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin')
@@ -35,7 +35,8 @@ export default function Landing() {
                     <h1 className="mb-6 text-5xl font-bold leading-tight text-foreground md:text-6xl lg:text-7xl">
                         Unleash Your Next Big Idea with{' '}
                         <span className="text-emerald-500">I</span>dea
-                        <span className="text-emerald-500">F</span>orge.
+                        <span className="text-emerald-500">F</span>orge
+                        <img src={Logo} alt="IdeaForge" className="inline h-36 w-auto -ml-8" />
                     </h1>
                     <p className="mb-8 text-lg text-muted-foreground md:text-xl">
                         AI-powered creativity at your fingertips. Generate ideas, spark innovation, and bring your visions to life.

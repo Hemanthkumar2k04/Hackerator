@@ -10,6 +10,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
   signInWithGoogle: () => Promise<{ error: AuthError | null }>
   signOut: () => Promise<void>
+  getProfile: (userId: string) => Promise<{ id: string; name: string; email: string; bio: string } | null>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -127,6 +128,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null)
   }
 
+  const getProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, name, email, bio")
+        .eq("id", userId)
+        .single()
+
+      if (error) {
+        console.error("Error fetching profile:", error)
+        return null
+      }
+
+      return data
+    } catch (err) {
+      console.error("Unexpected error fetching profile:", err)
+      return null
+    }
+  }
+
   const value = {
     user,
     session,
@@ -135,6 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signIn,
     signInWithGoogle,
     signOut,
+    getProfile,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

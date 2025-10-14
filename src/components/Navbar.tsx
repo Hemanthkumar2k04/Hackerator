@@ -1,14 +1,14 @@
 import { useState } from "react"
+import Logo from "@/assets/IdeaForge.svg"
+
 import {
   BookmarkIcon,
   HouseIcon,
-  LogOutIcon,
 } from "lucide-react"
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import AuthModal from './AuthModal'
 
-import ThemeToggle from "./ThemeToggle"
 import UserMenu from "./user-menu"
 import { Button } from "./ui/button"
 import {
@@ -32,7 +32,7 @@ const navigationLinks = [
 
 export default function Navbar() {
   const location = useLocation()
-  const { user, signOut } = useAuth()
+  const { user} = useAuth()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   return (
@@ -40,6 +40,11 @@ export default function Navbar() {
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">
+          {/* Brand/Logo */}
+          <a href="/" className="flex items-center gap-2">
+            <img src={Logo} alt="IdeaForge" className="h-20 w-auto" />
+          </a>
+          {/* App name - only show when logged in */}
           <span className="font-bold text-lg md:text-xl"><span className="text-emerald-500">I</span>dea<span className="text-emerald-500">F</span>orge</span>
           
           {/* Mobile menu trigger - only show when logged in */}
@@ -134,24 +139,10 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex flex-1 items-center justify-end gap-4">
           <div className="flex items-center gap-2">
-            {/* Theme toggle */}
-            <ThemeToggle />
-            
             {user ? (
               <>
-                
                 {/* User menu */}
                 <UserMenu />
-                {/* Sign out button */}
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => signOut()}
-                  className="size-8 text-muted-foreground hover:text-foreground"
-                  title="Sign Out"
-                >
-                  <LogOutIcon size={16} aria-hidden="true" />
-                </Button>
               </>
             ) : (
               <Button
