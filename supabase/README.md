@@ -67,3 +67,46 @@ When a user signs up and visits the Home page for the first time:
 
 ### Profile Already Exists Error
 - The app handles this automatically by updating the existing profile instead of inserting a new one
+
+## 4. Storage Bucket Setup
+
+This project uses Supabase Storage to store user-uploaded images. Create a bucket named `Images` and set its access as needed (public is simplest for development). To create the bucket:
+
+1. Open Supabase Dashboard
+2. Navigate to Storage -> Buckets
+3. Click "New Bucket"
+4. Use the name `Images` and set public access (or configure your preferred access policy)
+
+After creating the bucket, uploads from the Home page will be stored under `Images/{userId}/...` and a public URL will be returned for viewing.
+
+### Applying Storage Policies
+
+There are two ways to configure access for the `Images` bucket:
+
+- Owner-only policies (recommended for stricter control): Run `policies_owner.sql` in the Supabase SQL editor as the project owner. This enables RLS and creates policies to allow authenticated users to upload and manage their own files.
+
+  Note: If you upload to the bucket root (no subfolders), use `policies_owner.sql` which allows root uploads for authenticated users.
+
+- Public bucket (easiest for development): Make the `Images` bucket public in the Storage UI. You can use `policies_public.sql` as a reminder/instruction if you prefer running SQL scripts.
+
+If you tried to run the owner-only script and received a "must be owner of table objects" error, use the Supabase Dashboard as the project owner to run the script or set the bucket to public instead.
+
+#### RLS: INSERT blocked for storage.objects
+
+If you see errors like `new row violates row-level security policy` when uploading a file, it means the current RLS policies don't allow the insert. To fix this:
+
+1. Ensure you ran `policies_owner.sql` as the Supabase project owner so that RLS policies for `storage.objects` are applied correctly.
+2. If you can't run the owner script, set the `Images` bucket to public in the Storage UI (this avoids RLS checks for public objects).
+3. Double check the `bucket_id` in your upload path — the bucket name is case-insensitive in the SQL checks but must match the actual bucket name.
+4. Check `owner` field behavior: some Supabase setups set `owner` to NULL on upload; the policy allows inserts when `owner IS NULL`.
+
+If you're still blocked, share the exact SQL error and the object insert statement (or the Supabase client call) and I can help adjust the policy to match your setup.
+
+### Debugging Storage RLS Errors
+
+If you get `new row violates row-level security policy` when uploading:
+
+- Check that `policies_owner.sql` was run as the project owner.
+- Confirm that the `bucket_id` and object `name` match your upload path. If you upload to the bucket root, the policy allows `position('/' IN name) = 0`.
+- In the frontend, inspect the logged session and upload details (the app prints `Current session` and `Upload attempt details` to the console when uploading).
+- If your uploads don't set the `owner` field, the policy allows `owner IS NULL` during INSERTs. For updates the `owner` must equal the user's UID.
