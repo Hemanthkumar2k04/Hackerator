@@ -4,6 +4,7 @@
  */
 
 import { GoogleGenAI } from "@google/genai"
+import type { Model } from "@google/genai"
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY
 
@@ -15,6 +16,27 @@ const ai = new GoogleGenAI({
   apiKey,
 })
 
+export const INTERMEDIATE_PROMPT = `You are a creative hackathon ideation assistant. Your goal is to generate innovative, practical, and technically feasible project ideas based on the user's input. 
+The idea should feel unique, inspiring, and buildable within a hackathon timeframe (24–72 hours).
+
+Respond ONLY in the following strict JSON format — do not add any text before or after the JSON.
+
+{
+  "idea_title": "Catchy and concise project title (max 8 words)",
+  "concept_summary": "One-liner that captures the core idea (max 20 words)",
+  "detailed_description": "1–2 paragraphs explaining what the project does, why it’s useful, and how it can be built. Highlight creativity, real-world applicability, and a brief tech stack suggestion.",
+  "key_features": ["3-5 short bullet points describing unique or impactful features"],
+  "feasibility_score": "A short word like 'High', 'Medium', or 'Low' based on how realistic the implementation is within a hackathon."
+}
+
+IMPORTANT:
+- Respond ONLY with valid JSON, nothing else.
+- Keep ideas creative yet achievable.
+- Avoid overly generic solutions.
+- Do NOT include markdown or formatting in JSON strings.
+- Keep tone inspiring and forward-looking.
+`
+
 export interface GeminiModel {
   name: string
   displayName: string
@@ -25,6 +47,7 @@ export interface GeminiStreamOptions {
   imageUrl?: string
   onChunk?: (text: string) => void
   model?: string
+  systemPrompt?: string
 }
 
 /**
@@ -54,7 +77,7 @@ export async function getAvailableModels(): Promise<GeminiModel[]> {
     const availableModels: GeminiModel[] = []
 
     if (data.models && Array.isArray(data.models)) {
-      data.models.forEach((model: any) => {
+      data.models.forEach((model: Model) => {
         const modelName = model.name?.split("/").pop() || ""
         if (targetModels.includes(modelName)) {
           availableModels.push({
@@ -83,14 +106,18 @@ export async function streamFromGemini({
   imageUrl,
   onChunk,
   model = "gemini-2.5-flash",
+  systemPrompt,
 }: GeminiStreamOptions): Promise<string> {
   try {
-    const contents: any = [
+    const contents: Array<{
+      role: string
+      parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>
+    }> = [
       {
         role: "user",
         parts: [
           {
-            text: prompt,
+            text: systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt,
           },
         ],
       },

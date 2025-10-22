@@ -63,9 +63,9 @@ export function useStream(): UseStreamResult {
         setChunks((prev) => [...prev, remaining])
       }
       textBufferRef.current = ""
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Stream generation error:", err)
-      setError(err?.message || String(err))
+      setError((err as Error)?.message || String(err))
     } finally {
       setIsGenerating(false)
     }

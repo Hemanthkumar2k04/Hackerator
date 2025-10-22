@@ -1,6 +1,8 @@
 import './App.css'
 import Navbar from './components/Navbar'
 import { Home } from './pages/Home'
+import { Intermediate } from './pages/Intermediate'
+import { Workspace } from './pages/Workspace'
 import Saved from './pages/saved'
 import Landing from './pages/Landing'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -21,6 +23,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/intermediate"
+              element={
+                <ProtectedRoute>
+                  <Intermediate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/final"
+              element={
+                <ProtectedRoute>
+                  <Workspace />
                 </ProtectedRoute>
               }
             />

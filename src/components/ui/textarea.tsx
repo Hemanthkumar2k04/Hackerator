@@ -1,9 +1,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
-
-export function Textarea({ className, ...props }: TextareaProps) {
+export function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
   return (
     <textarea
       className={cn(

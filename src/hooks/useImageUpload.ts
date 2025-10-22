@@ -67,6 +67,7 @@ export function useImageUpload(userId: string | undefined): UseImageUploadResult
             resData = xhr.responseText ? JSON.parse(xhr.responseText) : null
           } catch (e) {
             console.warn('Non-JSON response from upload function', xhr.responseText)
+            console.log(e)
           }
 
           if (xhr.status >= 200 && xhr.status < 300) {
@@ -88,9 +89,9 @@ export function useImageUpload(userId: string | undefined): UseImageUploadResult
         form.append('file', selectedFile)
         xhr.send(form)
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
-      setError(err?.message || String(err))
+      setError((err as Error)?.message || String(err))
     } finally {
       setUploading(false)
       setUploadProgress(null)
