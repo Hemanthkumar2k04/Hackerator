@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronLeft, Menu, Trash2, Edit, Users, Lightbulb } from 'lucide-react';
 import ReactFlow, {
     Background,
     Controls,
@@ -105,6 +106,7 @@ export function Workspace() {
     const [projectIdea, setProjectIdea] = useState('This is where the original project idea goes. Click to edit and describe your vision for this project.');
     const [isEditingIdea, setIsEditingIdea] = useState(false);
     const [teamMembers] = useState(['Alice Johnson', 'Bob Smith', 'Carol Davis']);
+    const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
 
     const initialNodes: Node[] = useMemo(
         () =>
@@ -164,11 +166,21 @@ export function Workspace() {
 
     return (
         <div className="pt-20 h-screen bg-dark text-text-primary flex flex-row">
-            {/* Left Sidebar */}
-            <div className="w-80 bg-panel border-r border-border-muted overflow-y-auto flex flex-col">
+            {/* Left Sidebar - Overlay */}
+            <motion.div
+                initial={{ x: -320, opacity: 0 }}
+                animate={{
+                    x: isLeftSidebarOpen ? 0 : -320,
+                    opacity: isLeftSidebarOpen ? 1 : 0,
+                }}
+                transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+                className="fixed left-0 top-20 bottom-0 w-80 bg-panel border-r border-border-muted overflow-y-auto z-40 bg-black"
+                style={{ pointerEvents: isLeftSidebarOpen ? 'auto' : 'none' }}
+            >
+
                 {/* Project Title Section */}
                 <div className="p-6 border-b border-border-muted">
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2">
                         {isEditingTitle ? (
                             <input
                                 type="text"
@@ -194,9 +206,14 @@ export function Workspace() {
                             className="p-2 text-accent-primary hover:bg-surface rounded transition-colors flex-shrink-0"
                             title="Edit title"
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
+                            <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setIsLeftSidebarOpen(false)}
+                            className="p-2 text-text-muted hover:text-accent-primary hover:bg-surface rounded transition-colors flex-shrink-0"
+                            title="Close sidebar"
+                        >
+                            <ChevronLeft className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -206,17 +223,31 @@ export function Workspace() {
                     <h3 className="text-sm font-semibold text-text-primary mb-3">Phases</h3>
                     <div className="space-y-2">
                         {Object.values(phases).map((phase) => (
-                            <button
+                            <div
                                 key={phase.id}
-                                onClick={() => setSelectedPhase(phase.id)}
-                                className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm ${selectedPhase === phase.id
-                                    ? 'bg-accent-primary text-dark font-medium'
+                                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${selectedPhase === phase.id
+                                    ? 'bg-accent-primary text-dark'
                                     : 'bg-surface text-text-primary hover:bg-surface/80'
                                     }`}
                             >
-                                <div className="font-medium">Phase {phase.phase_no}</div>
-                                <div className="text-xs opacity-75">{phase.phase_name}</div>
-                            </button>
+                                <button
+                                    onClick={() => setSelectedPhase(phase.id)}
+                                    className="flex-1 text-left"
+                                >
+                                    <div className="font-medium">Phase {phase.phase_no}</div>
+                                    <div className="text-xs opacity-75">{phase.phase_name}</div>
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        // Delete phase logic will be added here
+                                        console.log('Delete phase:', phase.id);
+                                    }}
+                                    className="p-1 hover:bg-black/20 rounded transition-colors flex-shrink-0"
+                                    title="Delete phase"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -269,7 +300,21 @@ export function Workspace() {
                         </div>
                     )}
                 </div>
-            </div>
+            </motion.div>
+
+            {/* Floating Menu Button */}
+            {!isLeftSidebarOpen && (
+                <motion.button
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+                    onClick={() => setIsLeftSidebarOpen(true)}
+                    className="fixed left-6 top-32 z-50 p-3 bg-accent-primary text-dark rounded-full shadow-lg hover:bg-accent-secondary transition-colors"
+                    title="Open sidebar"
+                >
+                    <Menu className="w-6 h-6" />
+                </motion.button>
+            )}
 
             {/* Workspace Container with Border */}
             <div className="flex-1 flex relative overflow-hidden border-2 border-accent-primary m-4 rounded-lg bg-dark">
@@ -296,7 +341,7 @@ export function Workspace() {
                         opacity: selectedPhase ? 1 : 0,
                     }}
                     transition={{ type: 'spring', damping: 25, stiffness: 120 }}
-                    className="absolute right-0 top-0 bottom-0 w-96 bg-panel border-l border-border-muted overflow-y-auto flex flex-col h-auto"
+                    className="absolute right-0 top-0 bottom-0 w-96 bg-panel border-l border-border-muted overflow-y-auto flex flex-col h-auto bg-black z-30"
                     style={{ pointerEvents: selectedPhase ? 'auto' : 'none' }}
                 >
                     {selectedPhaseData && (
