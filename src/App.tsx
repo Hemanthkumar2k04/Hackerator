@@ -7,13 +7,14 @@ import { HomePage } from './pages/Home.tsx';
 import { TeamSetupModal } from './components/TeamSetupModal.tsx';
 import type { IntermediateIdea, TeamInfo } from './types/index.ts';
 
-type Page = 'landing' | 'home' | 'workspace' | 'saved';
+type Page = 'landing' | 'home' | 'workspace' | 'saved' | 'test';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IntermediateIdea | null>(null);
   const [showTeamSetup, setShowTeamSetup] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string>('');
 
   const handleSignIn = () => {
     setIsSignedIn(true);
@@ -69,6 +70,8 @@ function App() {
                   unique_selling_point: 'Placeholder',
                 }
               )}
+              selectedModel={selectedModel}
+              onModelChange={setSelectedModel}
             />
           </motion.div>
         )}
@@ -81,7 +84,11 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <HomePage onNavigate={handleNavigate} />
+            <HomePage 
+              onNavigate={handleNavigate}
+              selectedModel={selectedModel}
+              onModelChange={setSelectedModel}
+            />
           </motion.div>
         )}
 
@@ -105,6 +112,7 @@ function App() {
       {showTeamSetup && currentIdea && (
         <TeamSetupModal
           idea={currentIdea}
+          model={selectedModel}
           onComplete={handleTeamSetupComplete}
           onCancel={() => setShowTeamSetup(false)}
         />

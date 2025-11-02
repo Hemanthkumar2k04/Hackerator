@@ -8,6 +8,8 @@ interface InputAreaProps {
     onLoadingChange: (loading: boolean) => void;
     onComplete: () => void;
     showAuthPrompt?: boolean;
+    selectedModel?: string;
+    onModelChange?: (model: string) => void;
 }
 
 export function InputArea({
@@ -15,6 +17,8 @@ export function InputArea({
     onLoadingChange,
     onComplete,
     showAuthPrompt = false,
+    selectedModel: propSelectedModel,
+    onModelChange,
 }: InputAreaProps) {
     const [inputText, setInputText] = useState('');
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -22,8 +26,18 @@ export function InputArea({
     const [error, setError] = useState<string | null>(null);
     const [uploadedFileSummary, setUploadedFileSummary] = useState<string | null>(null);
     const [models, setModels] = useState<string[]>([]);
-    const [selectedModel, setSelectedModel] = useState<string>('');
+    const [internalSelectedModel, setInternalSelectedModel] = useState<string>('');
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Use external model if provided, otherwise use internal state
+    const selectedModel = propSelectedModel || internalSelectedModel;
+    
+    const handleModelChange = (model: string) => {
+        setInternalSelectedModel(model);
+        if (onModelChange) {
+            onModelChange(model);
+        }
+    };
 
     // Fetch available models on component mount
     useEffect(() => {
@@ -31,11 +45,15 @@ export function InputArea({
             const availableModels = await getAvailableModels();
             setModels(availableModels);
             if (availableModels.length > 0) {
-                setSelectedModel(availableModels[0]);
+                const defaultModel = propSelectedModel || availableModels[0];
+                setInternalSelectedModel(defaultModel);
+                if (onModelChange && !propSelectedModel) {
+                    onModelChange(defaultModel);
+                }
             }
         };
         fetchModels();
-    }, []);
+    }, [propSelectedModel, onModelChange]);
 
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -258,7 +276,7 @@ export function InputArea({
                         </label>
                         <select
                             value={selectedModel}
-                            onChange={(e) => setSelectedModel(e.target.value)}
+                            onChange={(e) => handleModelChange(e.target.value)}
                             disabled={isLoading}
                             className="w-full bg-surface-dark border border-border-subtle rounded px-3 py-2 text-primary focus:border-accent-primary focus:outline-none"
                         >

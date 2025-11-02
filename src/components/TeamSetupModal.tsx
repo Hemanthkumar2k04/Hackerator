@@ -5,6 +5,7 @@ import type { IntermediateIdea, TeamInfo, TeamMember } from '../types/index.ts';
 
 interface TeamSetupModalProps {
     idea: IntermediateIdea;
+    model?: string;
     onComplete: (teamInfo: TeamInfo) => void;
     onCancel: () => void;
     isLoading?: boolean;
@@ -12,6 +13,7 @@ interface TeamSetupModalProps {
 
 export function TeamSetupModal({
     idea,
+    model,
     onComplete,
     onCancel,
     isLoading: externalIsLoading = false,
@@ -25,6 +27,8 @@ export function TeamSetupModal({
     const [aiSplitTasks, setAiSplitTasks] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    console.log('[TeamSetupModal] Received model:', model);
 
     const updateMember = (index: number, field: keyof TeamMember, value: string) => {
         const updated = [...members];
@@ -70,7 +74,8 @@ export function TeamSetupModal({
 
             // Call LLM to split tasks if enabled
             if (aiSplitTasks) {
-                await splitTasks({ idea, team_info: teamInfo });
+                console.log('[TeamSetupModal] Splitting tasks with model:', model || 'undefined (will use default)');
+                await splitTasks({ idea, team_info: teamInfo, model: model || undefined });
             }
 
             onComplete(teamInfo);

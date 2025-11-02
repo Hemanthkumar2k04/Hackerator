@@ -10,6 +10,9 @@ export async function splitTasksHandler(req: Request, res: Response): Promise<vo
       model?: string;
     };
 
+    console.log('[splitTasksHandler] Received model:', model);
+    console.log('[splitTasksHandler] Request body:', JSON.stringify(req.body, null, 2));
+
     if (!idea || !team_info) {
       res.status(400).json({
         error: 'Both idea and team_info are required',

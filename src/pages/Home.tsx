@@ -4,9 +4,11 @@ import { useState } from 'react';
 
 interface HomeProps {
     onNavigate: (page: string) => void;
+    selectedModel: string;
+    onModelChange: (model: string) => void;
 }
 
-export function HomePage({ onNavigate }: HomeProps) {
+export function HomePage({ onNavigate, selectedModel, onModelChange }: HomeProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleComplete = () => {
@@ -37,15 +39,17 @@ export function HomePage({ onNavigate }: HomeProps) {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main input area - takes 2 columns */}
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
-                        className="lg:col-span-2"
+                        initial={{ opacity: 0, height: "5px" }}
+                        animate={{ opacity: 1, height: "600px" }}
+                        transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+                        className="lg:col-span-2 overflow-hidden"
                     >
                         <InputArea
                             isLoading={isLoading}
                             onLoadingChange={setIsLoading}
                             onComplete={handleComplete}
+                            selectedModel={selectedModel}
+                            onModelChange={onModelChange}
                         />
                     </motion.div>
 

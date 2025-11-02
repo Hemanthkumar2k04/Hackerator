@@ -24,6 +24,9 @@ export const config = {
   LLM_URL: getEnv('LLM_URL', 'http://127.0.0.1:1234'),
   LLM_TIMEOUT_MS: parseInt(getEnv('LLM_TIMEOUT_MS', '120000')),
 
+  // Gemini
+  GEMINI_API_KEY: getEnv('GEMINI_API_KEY', ''),
+
   // CORS
   CORS_ORIGIN: getEnv('CORS_ORIGIN', 'http://localhost:5173'),
 

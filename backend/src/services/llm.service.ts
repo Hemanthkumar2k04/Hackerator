@@ -24,28 +24,64 @@ interface LMStudioChatResponse {
 }
 
 /**
- * Get available models from LM Studio
+ * Get available models from both LM Studio and Gemini API
  */
 export async function getAvailableModels(): Promise<string[]> {
+  const models: string[] = [];
+
+  // Get LM Studio models
   try {
     const response = await llmClient.get<{ data: Array<{ id: string }> }>('/v1/models');
-    return response.data.data.map((model) => model.id);
+    const lmStudioModels = response.data.data.map((model) => model.id);
+    models.push(...lmStudioModels);
+    console.log(`[Models] Loaded ${lmStudioModels.length} LM Studio models`);
   } catch (error) {
-    console.error('Failed to fetch models:', error);
-    return [];
+    console.warn('[Models] Failed to fetch LM Studio models:', error);
   }
+
+  // Get Gemini models if API key is available
+  if (config.GEMINI_API_KEY) {
+    try {
+      const geminiResponse = await axios.get('https://generativelanguage.googleapis.com/v1beta/models', {
+        params: { key: config.GEMINI_API_KEY },
+      });
+      
+      const geminiModels = geminiResponse.data.models
+        .filter((m: { displayName: string }) => m.displayName.includes('Gemini'))
+        .map((m: { name: string }) => m.name.replace('models/', ''));
+      
+      models.push(...geminiModels);
+      console.log(`[Models] Loaded ${geminiModels.length} Gemini models`);
+    } catch (error) {
+      console.warn('[Models] Failed to fetch Gemini models:', error);
+    }
+  }
+
+  return models.length > 0 ? models : ['default'];
 }
 
 async function callLLM(prompt: string, model?: string, maxTokens?: number): Promise<string> {
-  try {
-    const selectedModel = model || config.LLM_MODEL;
-    const tokens = maxTokens || 500;
+  const selectedModel = model || config.LLM_MODEL;
+  const tokens = maxTokens || 12000;
 
-    console.log(`[LLM] Calling ${selectedModel} with ${tokens} max tokens...`);
+  // Check if it's a Gemini model
+  if (selectedModel.startsWith('gemini-') && config.GEMINI_API_KEY) {
+    return callGemini(prompt, selectedModel, tokens);
+  } else {
+    return callLMStudio(prompt, selectedModel, tokens);
+  }
+}
+
+/**
+ * Call LM Studio API
+ */
+async function callLMStudio(prompt: string, model: string, maxTokens: number): Promise<string> {
+  try {
+    console.log(`[LMStudio] Calling ${model} with ${maxTokens} max tokens...`);
     const startTime = Date.now();
 
     const response = await llmClient.post<LMStudioChatResponse>('/v1/chat/completions', {
-      model: selectedModel,
+      model,
       messages: [
         {
           role: 'system',
@@ -58,30 +94,87 @@ async function callLLM(prompt: string, model?: string, maxTokens?: number): Prom
         },
       ],
       temperature: 0.7,
-      max_tokens: tokens,
+      max_tokens: maxTokens,
     });
 
     const duration = Date.now() - startTime;
-    console.log(`[LLM] Response received in ${duration}ms`);
+    console.log(`[LMStudio] Response received in ${duration}ms`);
 
     if (response.data.error) {
-      throw new Error(`LLM Error: ${response.data.error}`);
+      throw new Error(`LM Studio Error: ${response.data.error}`);
     }
 
     const content = response.data.choices?.[0]?.message?.content || '';
-    console.log(`[LLM] Content length: ${content.length} characters`);
+    console.log(`[LMStudio] Content length: ${content.length} characters`);
     return content;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(`[LLM] Axios error: ${error.code} - ${error.message}`);
+      console.error(`[LMStudio] Axios error: ${error.code} - ${error.message}`);
       if (error.response) {
-        console.error(`[LLM] Response status: ${error.response.status}`);
+        console.error(`[LMStudio] Response status: ${error.response.status}`);
       }
       throw new Error(
-        `LLM call failed: ${error.message}. Ensure LM Studio is running at ${config.LLM_URL}`
+        `LM Studio call failed: ${error.message}. Ensure LM Studio is running at ${config.LLM_URL}`
       );
     }
-    console.error(`[LLM] Error:`, error);
+    console.error(`[LMStudio] Error:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Call Gemini API
+ */
+async function callGemini(prompt: string, model: string, maxTokens: number): Promise<string> {
+  try {
+    console.log(`[Gemini] Calling ${model} with ${maxTokens} max tokens...`);
+    const startTime = Date.now();
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt,
+              },
+            ],
+          },
+        ],
+        generationConfig: {
+          maxOutputTokens: maxTokens,
+          temperature: 0.7,
+        },
+        systemInstruction: {
+          parts: [
+            {
+              text: 'You are a creative hackathon ideation assistant. Respond with valid JSON only, no markdown.',
+            },
+          ],
+        },
+      },
+      {
+        params: { key: config.GEMINI_API_KEY },
+        timeout: config.LLM_TIMEOUT_MS,
+      }
+    );
+
+    const duration = Date.now() - startTime;
+    console.log(`[Gemini] Response received in ${duration}ms`);
+
+    const content = response.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    console.log(`[Gemini] Content length: ${content.length} characters`);
+    return content;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(`[Gemini] Axios error: ${error.code} - ${error.message}`);
+      if (error.response) {
+        console.error(`[Gemini] Response status: ${error.response.status}`);
+      }
+      throw new Error(`Gemini call failed: ${error.message}`);
+    }
+    console.error(`[Gemini] Error:`, error);
     throw error;
   }
 }
@@ -224,6 +317,7 @@ export async function splitTasks(
   teamInfo: TeamInfo,
   model?: string
 ): Promise<TaskDistribution> {
+  console.log('[splitTasks] Function called with model:', model);
   const memberList = teamInfo.members
     .map((m: TeamMember) => `- ${m.name} (${m.role})`)
     .join('\n');
@@ -265,7 +359,7 @@ Respond with ONLY this exact JSON structure (remember: every task MUST have esti
 }`;
 
   console.log(`[splitTasks] Requesting task distribution for idea: "${idea.idea_title}"`);
-  const response = await callLLM(prompt, model, 2000);
+  const response = await callLLM(prompt, model, 12000);
 
   try {
     console.log(`[splitTasks] Raw response length: ${response.length} characters`);

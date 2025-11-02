@@ -5,9 +5,11 @@ import { InputArea } from '../components/InputArea.tsx';
 interface LandingProps {
     onSignIn: () => void;
     onProceed: () => void;
+    selectedModel?: string;
+    onModelChange?: (model: string) => void;
 }
 
-export function LandingPage({ onSignIn, onProceed }: LandingProps) {
+export function LandingPage({ onSignIn, onProceed, selectedModel, onModelChange }: LandingProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     return (
@@ -68,21 +70,24 @@ export function LandingPage({ onSignIn, onProceed }: LandingProps) {
                 </motion.div>
 
                 {/* Right column - Input area */}
-                <motion.div
-                    className="col-span-12 lg:col-span-7 flex flex-col justify-center items-center px-8 lg:px-16 py-12"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                    <div className="w-full max-w-xl">
+                <div className="col-span-12 lg:col-span-7 flex flex-col justify-center items-center px-8 lg:px-16 py-12 overflow-hidden">
+                    <motion.div
+                        className="w-full max-w-xl"
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: "100%" }}
+
+                        transition={{ duration: 1, delay: 0.1, ease: "easeOut" }}
+                    >
                         <InputArea
                             isLoading={isLoading}
                             onLoadingChange={setIsLoading}
                             onComplete={onProceed}
                             showAuthPrompt
+                            selectedModel={selectedModel}
+                            onModelChange={onModelChange}
                         />
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
         </div>
     );
