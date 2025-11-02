@@ -6,11 +6,12 @@ import { LandingPage } from './pages/Landing.tsx';
 import { HomePage } from './pages/Home.tsx';
 import { TeamSetupModal } from './components/TeamSetupModal.tsx';
 import type { IntermediateIdea, TeamInfo } from './types/index.ts';
+import { Workspace } from './pages/Workspace.tsx';
 
 type Page = 'landing' | 'home' | 'workspace' | 'saved' | 'test';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('landing');
+  const [currentPage, setCurrentPage] = useState<Page>('workspace');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IntermediateIdea | null>(null);
   const [showTeamSetup, setShowTeamSetup] = useState(false);
@@ -84,7 +85,7 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <HomePage 
+            <HomePage
               onNavigate={handleNavigate}
               selectedModel={selectedModel}
               onModelChange={setSelectedModel}
@@ -100,10 +101,7 @@ function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="pt-20 p-8 text-center">
-              <h1 className="text-3xl font-bold text-primary mb-4">Workspace</h1>
-              <p className="text-secondary">Workspace view coming soon...</p>
-            </div>
+            <Workspace />
           </motion.div>
         )}
       </AnimatePresence>

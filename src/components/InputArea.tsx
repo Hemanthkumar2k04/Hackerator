@@ -31,7 +31,7 @@ export function InputArea({
 
     // Use external model if provided, otherwise use internal state
     const selectedModel = propSelectedModel || internalSelectedModel;
-    
+
     const handleModelChange = (model: string) => {
         setInternalSelectedModel(model);
         if (onModelChange) {
