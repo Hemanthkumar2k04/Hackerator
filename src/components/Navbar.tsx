@@ -38,10 +38,10 @@ export function Navbar({
                         {isSignedIn && (
                             <>
                                 <button
-                                    onClick={() => onNavigate?.('saved')}
+                                    onClick={() => onNavigate?.('workspace')}
                                     className="text-secondary hover:text-primary transition"
                                 >
-                                    Saved Ideas
+                                    Workspace
                                 </button>
                                 <button
                                     onClick={onSignOut}

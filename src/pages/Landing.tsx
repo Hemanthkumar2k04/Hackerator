@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { InputArea } from '../components/InputArea.tsx';
+import type { IntermediateIdea } from '../types/index.ts';
 
 interface LandingProps {
     onSignIn: () => void;
-    onProceed: () => void;
+    onProceed: (idea: IntermediateIdea) => void;
     selectedModel?: string;
     onModelChange?: (model: string) => void;
 }

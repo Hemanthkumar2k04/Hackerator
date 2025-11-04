@@ -8,10 +8,10 @@ import { TeamSetupModal } from './components/TeamSetupModal.tsx';
 import type { IntermediateIdea, TeamInfo } from './types/index.ts';
 import { Workspace } from './pages/Workspace.tsx';
 
-type Page = 'landing' | 'home' | 'workspace' | 'saved' | 'test';
+type Page = 'landing' | 'home' | 'workspace' | 'test';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('workspace');
+  const [currentPage, setCurrentPage] = useState<Page>('landing');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IntermediateIdea | null>(null);
   const [showTeamSetup, setShowTeamSetup] = useState(false);
@@ -63,14 +63,7 @@ function App() {
           >
             <LandingPage
               onSignIn={handleSignIn}
-              onProceed={() => handleIdeaComplete(
-                // Placeholder - would get from InputArea
-                {
-                  idea_title: 'Placeholder',
-                  idea_summary: 'Placeholder',
-                  unique_selling_point: 'Placeholder',
-                }
-              )}
+              onProceed={(idea) => handleIdeaComplete(idea)}
               selectedModel={selectedModel}
               onModelChange={setSelectedModel}
             />
@@ -93,7 +86,7 @@ function App() {
           </motion.div>
         )}
 
-        {currentPage === 'workspace' && (
+        {currentPage === 'workspace' && isSignedIn && (
           <motion.div
             key="workspace"
             initial={{ opacity: 0 }}
@@ -102,6 +95,28 @@ function App() {
             transition={{ duration: 0.3 }}
           >
             <Workspace />
+          </motion.div>
+        )}
+
+        {currentPage === 'workspace' && !isSignedIn && (
+          <motion.div
+            key="unauthorized"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="pt-20 text-center"
+          >
+            <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+              <h2 className="text-2xl font-bold text-text-primary">Sign In Required</h2>
+              <p className="text-text-muted">Please sign in to access the workspace</p>
+              <button
+                onClick={handleSignIn}
+                className="px-6 py-2 bg-accent-primary text-dark rounded hover:bg-accent-secondary transition"
+              >
+                Sign In Now
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

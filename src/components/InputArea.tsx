@@ -2,11 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateIdea, uploadFile, getAvailableModels } from '../lib/api.ts';
 import type { IntermediateIdea } from '../types/index.ts';
-
+import { Sparkles, LoaderCircle } from 'lucide-react';
 interface InputAreaProps {
     isLoading: boolean;
     onLoadingChange: (loading: boolean) => void;
-    onComplete: () => void;
+    onComplete: (idea: IntermediateIdea) => void;
     showAuthPrompt?: boolean;
     selectedModel?: string;
     onModelChange?: (model: string) => void;
@@ -178,8 +178,9 @@ export function InputArea({
                             </button>
                             <button
                                 onClick={() => {
-                                    // Store idea in local state or context
-                                    onComplete();
+                                    if (idea) {
+                                        onComplete(idea);
+                                    }
                                 }}
                                 className="flex-1 px-4 py-2 bg-accent-primary text-surface-dark rounded font-semibold hover:bg-accent-secondary transition"
                             >
@@ -300,10 +301,14 @@ export function InputArea({
                 >
                     {isLoading ? (
                         <span className="flex items-center justify-center gap-2">
-                            <span className="animate-spin">⏳</span> Generating...
+                            <span className="animate-spin">
+                                <LoaderCircle className="w-5 h-5 text-surface-dark" />
+                            </span> Generating...
                         </span>
                     ) : (
-                        '✨ Generate Idea'
+                        <span className="flex items-center justify-center gap-2">
+                            <Sparkles className="w-4 h-4 text-accent-primary" /> Generate Idea
+                        </span>
                     )}
                 </motion.button>
 

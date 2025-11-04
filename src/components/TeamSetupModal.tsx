@@ -99,7 +99,7 @@ export function TeamSetupModal({
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="bg-surface-darker rounded-lg border border-border-subtle max-w-md w-full max-h-[90vh] overflow-y-auto"
+                className="bg-surface-darker rounded-lg border border-border-subtle max-w-xl w-full max-h-[90vh] overflow-y-auto"
             >
                 <div className="p-6">
                     <h2 className="text-2xl font-bold text-primary mb-2">Team Setup</h2>
