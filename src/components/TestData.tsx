@@ -1,0 +1,98 @@
+export const testProjectData = {
+    projectTitle: 'Hackerator - AI Project Planning Tool',
+    projectIdea: `A comprehensive project management and visualization platform that leverages AI to help teams plan, organize, and execute projects efficiently. Hackerator combines React Flow for visual workflow management with Supabase for real-time collaboration, allowing teams to break down complex projects into phases, assign tasks, track progress, and maintain clear communication throughout the development lifecycle.`,
+    teamMembers: [
+        {
+            name: 'Alice Johnson',
+            role: 'Project Lead',
+            avatar: 'A',
+        },
+        {
+            name: 'Bob Smith',
+            role: 'Full Stack Developer',
+            avatar: 'B',
+        },
+        {
+            name: 'Carol Davis',
+            role: 'UI/UX Designer',
+            avatar: 'C',
+        },
+        {
+            name: 'David Chen',
+            role: 'Backend Engineer',
+            avatar: 'D',
+        },
+        {
+            name: 'Emma Wilson',
+            role: 'QA Engineer',
+            avatar: 'E',
+        },
+    ],
+    phases: {
+        'phase-1': {
+            id: 'phase-1',
+            phase_no: 1,
+            phase_name: 'Research & Planning',
+            todos: [
+                { id: '1-1', name: 'Market research', completed: true },
+                { id: '1-2', name: 'Competitor analysis', completed: true },
+                { id: '1-3', name: 'Architecture design', completed: true },
+                { id: '1-4', name: 'Technology stack evaluation', completed: true },
+            ],
+            est_time_minutes: 480,
+            prev_phase_id: undefined,
+            next_phase_id: 'phase-2',
+        },
+        'phase-2': {
+            id: 'phase-2',
+            phase_no: 2,
+            phase_name: 'Backend Development',
+            todos: [
+                { id: '2-1', name: 'Setup environment', completed: true },
+                { id: '2-2', name: 'Database schema', completed: true },
+                { id: '2-3', name: 'API endpoints', completed: false },
+                { id: '2-4', name: 'Authentication', completed: true },
+                { id: '2-5', name: 'Integration with Supabase', completed: false },
+                { id: '2-6', name: 'API testing', completed: false },
+            ],
+            est_time_minutes: 720,
+            prev_phase_id: 'phase-1',
+            next_phase_id: 'phase-3',
+        },
+        'phase-3': {
+            id: 'phase-3',
+            phase_no: 3,
+            phase_name: 'Frontend Development',
+            todos: [
+                { id: '3-1', name: 'UI design', completed: true },
+                { id: '3-2', name: 'Component library', completed: false },
+                { id: '3-3', name: 'Dashboard page', completed: true },
+                { id: '3-4', name: 'Workspace visualization', completed: false },
+                { id: '3-5', name: 'Phase node rendering', completed: true },
+                { id: '3-6', name: 'Sidebar implementation', completed: true },
+                { id: '3-7', name: 'Responsive design', completed: false },
+            ],
+            est_time_minutes: 600,
+            prev_phase_id: 'phase-2',
+            next_phase_id: 'phase-4',
+        },
+        'phase-4': {
+            id: 'phase-4',
+            phase_no: 4,
+            phase_name: 'Testing & Deployment',
+            todos: [
+                { id: '4-1', name: 'Unit tests', completed: false },
+                { id: '4-2', name: 'Integration tests', completed: false },
+                { id: '4-3', name: 'Deployment setup', completed: false },
+                { id: '4-4', name: 'CI/CD pipeline', completed: false },
+                { id: '4-5', name: 'Performance optimization', completed: false },
+                { id: '4-6', name: 'Security audit', completed: false },
+                { id: '4-7', name: 'Launch preparation', completed: false },
+            ],
+            est_time_minutes: 360,
+            prev_phase_id: 'phase-3',
+            next_phase_id: undefined,
+        },
+    },
+};
+

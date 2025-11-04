@@ -4,7 +4,7 @@ import { useState } from 'react';
 export interface WorkspaceNodeData {
     phase_no: number;
     phase_name: string;
-    todos: string[];
+    todos: { id: string; name: string; completed: boolean }[];
     est_time_minutes: number;
     prev_phase_id?: string;
     next_phase_id?: string;
