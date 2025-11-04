@@ -19,11 +19,6 @@ export const config = {
   SUPABASE_URL: getEnv('SUPABASE_URL'),
   SUPABASE_KEY: getEnv('SUPABASE_KEY'),
 
-  // LLM (LM Studio)
-  LLM_MODEL: getEnv('LLM_MODEL', 'default'),
-  LLM_URL: getEnv('LLM_URL', 'http://127.0.0.1:1234'),
-  LLM_TIMEOUT_MS: parseInt(getEnv('LLM_TIMEOUT_MS', '120000')),
-
   // Gemini
   GEMINI_API_KEY: getEnv('GEMINI_API_KEY', ''),
 

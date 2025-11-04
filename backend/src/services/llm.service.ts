@@ -9,35 +9,11 @@ import {
   type TeamMember,
 } from '../schemas.ts';
 
-const llmClient = axios.create({
-  baseURL: config.LLM_URL,
-  timeout: config.LLM_TIMEOUT_MS,
-});
-
-interface LMStudioChatResponse {
-  choices: Array<{
-    message: {
-      content: string;
-    };
-  }>;
-  error?: string;
-}
-
 /**
- * Get available models from both LM Studio and Gemini API
+ * Get available Gemini models
  */
 export async function getAvailableModels(): Promise<string[]> {
   const models: string[] = [];
-
-  // Get LM Studio models
-  try {
-    const response = await llmClient.get<{ data: Array<{ id: string }> }>('/v1/models');
-    const lmStudioModels = response.data.data.map((model) => model.id);
-    models.push(...lmStudioModels);
-    console.log(`[Models] Loaded ${lmStudioModels.length} LM Studio models`);
-  } catch (error) {
-    console.warn('[Models] Failed to fetch LM Studio models:', error);
-  }
 
   // Get Gemini models if API key is available
   if (config.GEMINI_API_KEY) {
@@ -57,69 +33,18 @@ export async function getAvailableModels(): Promise<string[]> {
     }
   }
 
-  return models.length > 0 ? models : ['default'];
+  return models.length > 0 ? models : ['gemini-1.5-pro'];
 }
 
 async function callLLM(prompt: string, model?: string, maxTokens?: number): Promise<string> {
-  const selectedModel = model || config.LLM_MODEL;
+  const selectedModel = model || 'gemini-1.5-pro';
   const tokens = maxTokens || 12000;
 
-  // Check if it's a Gemini model
-  if (selectedModel.startsWith('gemini-') && config.GEMINI_API_KEY) {
-    return callGemini(prompt, selectedModel, tokens);
-  } else {
-    return callLMStudio(prompt, selectedModel, tokens);
+  if (!config.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not configured');
   }
-}
 
-/**
- * Call LM Studio API
- */
-async function callLMStudio(prompt: string, model: string, maxTokens: number): Promise<string> {
-  try {
-    console.log(`[LMStudio] Calling ${model} with ${maxTokens} max tokens...`);
-    const startTime = Date.now();
-
-    const response = await llmClient.post<LMStudioChatResponse>('/v1/chat/completions', {
-      model,
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a creative hackathon ideation assistant. Respond with valid JSON only, no markdown.',
-        },
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: maxTokens,
-    });
-
-    const duration = Date.now() - startTime;
-    console.log(`[LMStudio] Response received in ${duration}ms`);
-
-    if (response.data.error) {
-      throw new Error(`LM Studio Error: ${response.data.error}`);
-    }
-
-    const content = response.data.choices?.[0]?.message?.content || '';
-    console.log(`[LMStudio] Content length: ${content.length} characters`);
-    return content;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(`[LMStudio] Axios error: ${error.code} - ${error.message}`);
-      if (error.response) {
-        console.error(`[LMStudio] Response status: ${error.response.status}`);
-      }
-      throw new Error(
-        `LM Studio call failed: ${error.message}. Ensure LM Studio is running at ${config.LLM_URL}`
-      );
-    }
-    console.error(`[LMStudio] Error:`, error);
-    throw error;
-  }
+  return callGemini(prompt, selectedModel, tokens);
 }
 
 /**
@@ -156,7 +81,7 @@ async function callGemini(prompt: string, model: string, maxTokens: number): Pro
       },
       {
         params: { key: config.GEMINI_API_KEY },
-        timeout: config.LLM_TIMEOUT_MS,
+        timeout: 30000,
       }
     );
 

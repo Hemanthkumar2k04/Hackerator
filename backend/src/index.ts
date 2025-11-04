@@ -51,7 +51,7 @@ async function start() {
     app.listen(config.PORT, () => {
       console.log(`✓ Server running on http://localhost:${config.PORT}`);
       console.log(`  NODE_ENV: ${config.NODE_ENV}`);
-      console.log(`  LLM: ${config.LLM_URL} (model: ${config.LLM_MODEL})`);
+      console.log(`  Using Gemini API for LLM`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
