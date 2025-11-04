@@ -63,14 +63,7 @@ function App() {
           >
             <LandingPage
               onSignIn={handleSignIn}
-              onProceed={() => handleIdeaComplete(
-                // Placeholder - would get from InputArea
-                {
-                  idea_title: 'Placeholder',
-                  idea_summary: 'Placeholder',
-                  unique_selling_point: 'Placeholder',
-                }
-              )}
+              onProceed={(idea) => handleIdeaComplete(idea)}
               selectedModel={selectedModel}
               onModelChange={setSelectedModel}
             />
