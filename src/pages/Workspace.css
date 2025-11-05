@@ -1,14 +1,12 @@
 /* Override React Flow default styles */
-.react-flow__node {
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-
+.react-flow__node,
 .react-flow__node-default {
-  background: transparent;
-  border: none;
-  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  box-shadow: none !important;
 }
 
 .react-flow__handle {

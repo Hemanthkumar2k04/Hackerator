@@ -28,37 +28,42 @@ const PhaseNodeComponent = ({
 }) => {
     const isComplete = data.completionPercentage === 100;
 
+    // Determine border and shadow colors
+    let borderColor = 'hsl(220, 12%, 20%)';
+    let shadowColor = 'hsla(220, 12%, 20%, 0.5)';
+
+    if (data.isSelected) {
+        borderColor = 'hsl(220, 90%, 56%)';
+        shadowColor = 'hsla(220, 90%, 56%, 0.5)';
+    } else if (isComplete) {
+        borderColor = 'hsl(150, 60%, 45%)';
+        shadowColor = 'hsla(150, 60%, 45%, 0.5)';
+    }
+
     return (
         <>
             <Handle type="target" position={Position.Top} />
             <div
-                className={`px-6 py-4 rounded-lg border-2 transition-all cursor-pointer text-center min-w-64 ${data.isSelected
-                    ? 'bg-white/10 shadow-lg text-white'
-                    : isComplete
-                        ? 'bg-white/10 shadow-lg text-white'
-                        : 'bg-white/10 border-white/20 hover:border-accent-primary hover:shadow-lg hover:shadow-accent-primary/30 text-white'
-                    }`}
-                style={
-                    data.isSelected
-                        ? {
-                            borderColor: 'hsl(220, 90%, 56%)',
-                            boxShadow: '0 10px 25px -5px hsla(220, 90%, 56%, 0.5)',
-                        }
-                        : isComplete
-                            ? {
-                                borderColor: 'hsl(150, 60%, 45%)',
-                                boxShadow: '0 10px 25px -5px hsla(150, 60%, 45%, 0.5)',
-                            }
-                            : undefined
-                }
+                style={{
+                    padding: '1.5rem',
+                    borderRadius: '0.5rem',
+                    border: '2px solid',
+                    borderColor,
+                    boxShadow: `0 10px 25px -5px ${shadowColor}`,
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    minWidth: '256px',
+                    transition: 'all 0.2s ease',
+                    color: 'hsl(0, 0%, 95%)',
+                }}
                 onClick={() => data.onSelect(data.id)}
             >
-                <div className="flex flex-col items-center">
-                    <span className="text-xs font-semibold mb-1">
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.25rem' }}>
                         Phase {data.phase_no}
                     </span>
-                    <h3 className="text-base font-bold">{data.phase_name}</h3>
-                    <span className="text-xs mt-2 opacity-75">{data.completionPercentage ?? 0}%</span>
+                    <h3 style={{ fontSize: '1rem', fontWeight: '700', margin: 0 }}>{data.phase_name}</h3>
+                    <span style={{ fontSize: '0.75rem', marginTop: '0.5rem', opacity: 0.75 }}>{data.completionPercentage ?? 0}%</span>
                 </div>
             </div>
             <Handle type="source" position={Position.Bottom} />
