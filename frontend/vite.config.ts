@@ -11,14 +11,25 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules/reactflow')) {
-            return 'react-flow'
-          }
-          if (id.includes('node_modules/framer-motion')) {
-            return 'framer-motion'
-          }
-          if (id.includes('node_modules/lucide-react')) {
-            return 'lucide'
+          if (id.includes('node_modules')) {
+            if (id.includes('three') || id.includes('@react-three') || id.includes('postprocessing')) {
+              return 'vendor-three';
+            }
+            if (id.includes('reactflow')) {
+              return 'react-flow';
+            }
+            if (id.includes('face-api.js')) {
+              return 'face-api';
+            }
+            if (id.includes('framer-motion') || id.includes('motion')) {
+              return 'framer-motion';
+            }
+            if (id.includes('react-dom') || id.includes('react-router-dom') || id.match(/\/react\//)) {
+              return 'vendor-react';
+            }
+            if (id.includes('lucide-react') || id.includes('@radix-ui') || id.includes('clsx') || id.includes('tailwind-merge')) {
+              return 'vendor-ui';
+            }
           }
         },
       },
