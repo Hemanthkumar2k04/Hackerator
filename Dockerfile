@@ -1,13 +1,13 @@
 # Build Stage
-FROM node:20-alpine3.19 AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app/frontend
 
 # Copy package files for better caching
 COPY frontend/package.json frontend/package-lock.json* ./
 
-# Install dependencies (clean install)
-RUN npm ci
+# Install dependencies - use npm install as fallback if no lock file exists
+RUN npm install --legacy-peer-deps --prefer-offline --no-audit
 
 # Copy the rest of the application code
 COPY frontend/ .

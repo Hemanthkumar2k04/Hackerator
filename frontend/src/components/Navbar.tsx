@@ -102,8 +102,8 @@ export function Navbar({ variant = 'public'}: NavbarProps) {
               >
                 <NavLink to="/auth">
                   <span className="inline-flex items-center gap-2">
-                    <span className="text-lg font-semibold">Get Started</span>
-                    <FiArrowRight className="h-5 w-5" />
+                    <span className="text-lg text-black font-semibold">Get Started</span>
+                    <FiArrowRight className="h-5 w-5 text-black font-semibold" />
                   </span>
                 </NavLink>
               </Button>

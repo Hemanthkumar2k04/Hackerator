@@ -1,52 +1,115 @@
 import { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Wallet, Stethoscope, GraduationCap, ShoppingBag, Share2, Briefcase, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlaceholdersAndVanishInput } from '@/components/ui/placeholders-and-vanish-input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import Beams from '@/components/Beams';
+import { ProjectPlanCardStack } from '@/components/ProjectPlanCardStack';
+import Ai01 from '@/components/ai-01';
+
+interface ProjectPlan {
+  project_title: string;
+  short_summary: string;
+  problem_statement: string;
+  key_features: string[];
+  target_users: string[];
+  tech_stack: {
+    [key: string]: string[];
+  };
+  architecture_overview: string;
+  estimated_timeline: string;
+  notes: string;
+}
+
+
 
 export function HomePage() {
   const [activeMode, setActiveMode] = useState<'project' | 'hackathon' | null>(null);
   const navigate = useNavigate();
   const [projectName, setProjectName] = useState('');
   const [projectDescription, setProjectDescription] = useState('');
-  const [selectedDomain, setSelectedDomain] = useState<string>("");
+  const [projectPlan, setProjectPlan] = useState<ProjectPlan | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
 
   const handleCreateProject = () => {
     // In a real app, you would save the project details here
     navigate('/workspace');
   };
 
-  const handleProjectSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!selectedDomain) {
-      toast.error("Please select a domain first", {
-        description: "We need to know the domain to tailor the project plan.",
-      });
-      return;
+  const handleBack = () => {
+    if (activeMode === 'project' && step === 2) {
+      setStep(1);
+    } else {
+      setActiveMode(null);
+      setStep(1);
     }
-    // Proceed with project creation
-    console.log("Creating project in domain:", selectedDomain);
-    navigate('/workspace');
   };
 
-  const handleVanishChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
+  const handleIdeaSubmit = async (message: string) => {
+      if (!message) return;
+
+      setIsLoading(true);
+      try {
+        const response = await fetch('http://localhost:3000/api/ideas/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ idea: message }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate project plan');
+        }
+
+        const data = await response.json();
+        setProjectPlan(data);
+        setStep(2);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to generate project plan", {
+          description: "Please try again later.",
+        });
+      } finally {
+        setIsLoading(false);
+      }
   };
 
-  const placeholders = [
-    "Build a fintech dashboard for tracking expenses...",
-    "Create a healthcare app for patient monitoring...",
-    "Develop an e-learning platform for coding...",
-    "Design a social media app for designers...",
-    "Architect a supply chain management system...",
-  ];
+  const handleStartBuilding = async () => {
+    if (!projectPlan) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/projects', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectPlan),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save project');
+      }
+
+      toast.success("Project saved successfully!");
+      navigate('/workspace');
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save project", {
+        description: "Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black">
@@ -74,7 +137,7 @@ export function HomePage() {
         <Navbar variant="auth" />
       </div>
       
-      <main className="relative w-full min-h-[80vh] flex flex-col items-center justify-start pt-10">
+      <main className="relative w-full min-h-[80vh] flex flex-col items-center justify-start pt-4">
         <AnimatePresence mode="wait">
           {!activeMode ? (
             <motion.div 
@@ -83,7 +146,7 @@ export function HomePage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="flex flex-col items-center w-full px-4"
+              className="flex flex-col items-center w-full px-4 pt-10"
             >
               <h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl text-white font-bold">
                 What do you want to build today?
@@ -155,22 +218,22 @@ export function HomePage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: 100, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="w-full max-w-5xl px-4 flex flex-col items-center"
+              className="w-full max-w-[95%] px-4 flex flex-col items-center"
             >
-              <div className="w-full flex items-center justify-start mb-8">
+              <div className="w-full flex items-center justify-start mb-4">
                 <button 
-                  onClick={() => setActiveMode(null)}
+                  onClick={handleBack}
                   className="p-2 rounded-full hover:bg-neutral-800 transition-colors"
                 >
                   <ArrowLeft className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="text-center space-y-2 mb-8">
+              <div className="text-center space-y-2 mb-4">
                 <h3 className={cn("text-3xl font-bold", activeMode === 'hackathon' ? "text-orange-500" : "text-neutral-200")}>
                   {activeMode === 'project' ? 'Complete Project' : 'Hackathon Mode'}
                 </h3>
-                <p className="text-lg text-neutral-400">
+                <p className="text-lg text-neutral-300">
                   {activeMode === 'project' 
                     ? 'Build a complete end to end project with full features and scalability in mind.'
                     : 'Build with MVP focused roadmap optimized for speed and hackathons.'
@@ -179,73 +242,50 @@ export function HomePage() {
               </div>
 
               {activeMode === 'project' ? (
-                <div className="w-full max-w-7xl flex flex-col items-center gap-8 py-10">
-                   <h3 className="text-xl md:text-2xl font-semibold text-neutral-300">
-                     Let the AI help you with your idea
-                   </h3>
-                   
-                   <div className="w-full flex flex-col items-center gap-6 px-4">
-                     <div className="w-full md:w-[300px] shrink-0">
-                       <Select onValueChange={setSelectedDomain}>
-                         <SelectTrigger className="w-full h-16 text-lg bg-neutral-900 border-neutral-800 px-6 rounded-full">
-                           <SelectValue placeholder="Select Domain" />
-                         </SelectTrigger>
-                         <SelectContent>
-                           <SelectItem value="fintech" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <Wallet className="w-5 h-5 text-emerald-500" />
-                               <span>Fintech</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="healthcare" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <Stethoscope className="w-5 h-5 text-rose-500" />
-                               <span>Healthcare</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="edtech" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <GraduationCap className="w-5 h-5 text-blue-500" />
-                               <span>EdTech</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="ecommerce" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <ShoppingBag className="w-5 h-5 text-purple-500" />
-                               <span>E-commerce</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="social" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <Share2 className="w-5 h-5 text-pink-500" />
-                               <span>Social Media</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="productivity" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <Briefcase className="w-5 h-5 text-orange-500" />
-                               <span>Productivity</span>
-                             </div>
-                           </SelectItem>
-                           <SelectItem value="other" className="text-base py-3">
-                             <div className="flex items-center gap-3">
-                               <MoreHorizontal className="w-5 h-5 text-gray-500" />
-                               <span>Other</span>
-                             </div>
-                           </SelectItem>
-                         </SelectContent>
-                       </Select>
-                     </div>
-
-                     <div className="w-full">
-                       <PlaceholdersAndVanishInput
-                         placeholders={placeholders}
-                         onChange={handleVanishChange}
-                         onSubmit={handleProjectSubmit}
-                         className="min-h-16 text-lg max-w-none"
-                       />
-                     </div>
+                <div className="w-full max-w-full flex flex-col items-center gap-8 py-4">
+                   {/* Step Indicator */}
+                   <div className="flex items-center gap-2 mb-4">
+                      <div className={cn("h-1.5 w-12 rounded-full transition-colors duration-300", step >= 1 ? "bg-white" : "bg-neutral-800")} />
+                      <div className={cn("h-1.5 w-12 rounded-full transition-colors duration-300", step >= 2 ? "bg-white" : "bg-neutral-800")} />
                    </div>
+
+                   <AnimatePresence mode="wait">
+                     {step === 1 ? (
+                       <motion.div
+                         key="step1"
+                         initial={{ x: -20, opacity: 0 }}
+                         animate={{ x: 0, opacity: 1 }}
+                         exit={{ x: -20, opacity: 0 }}
+                         transition={{ duration: 0.3 }}
+                         className="w-full flex flex-col items-center gap-6"
+                       >
+                         <h3 className="text-xl md:text-2xl font-semibold text-neutral-300">
+                           Let the AI help you with your idea
+                         </h3>
+                         
+                         <div className="w-full flex flex-col items-center gap-6 px-4">
+                           <div className="w-full max-w-2xl">
+                             <Ai01 onSubmit={handleIdeaSubmit} />
+                           </div>
+                         </div>
+
+                         {isLoading && (
+                            <div className="flex justify-center mt-8">
+                              <Loader2 className="w-8 h-8 animate-spin text-white" />
+                            </div>
+                          )}
+                       </motion.div>
+                     ) : (
+                       projectPlan && (
+                        <ProjectPlanCardStack
+                          projectPlan={projectPlan}
+                          setProjectPlan={setProjectPlan}
+                          onComplete={handleStartBuilding}
+                          isLoading={isLoading}
+                        />
+                       )
+                     )}
+                   </AnimatePresence>
                 </div>
               ) : (
                 <div className={cn(

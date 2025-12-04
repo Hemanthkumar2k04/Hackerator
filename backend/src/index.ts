@@ -16,12 +16,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 // app.options('*', cors(corsOptions));
 
+app.use(express.json());
+
 import adminRoutes from './routes/admin';
+import ideasRoutes from './routes/ideas';
+import projectsRoutes from './routes/projects';
 
 app.use("/api/auth", toNodeHandler(auth));
 app.use("/api/admin", adminRoutes);
-
-app.use(express.json());
+app.use("/api/ideas", ideasRoutes);
+app.use("/api/projects", projectsRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hackerator Backend is running!');
