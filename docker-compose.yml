@@ -19,7 +19,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=postgres://hackerator:hackerator@2025@db:5432/hackerator_db
-      - BETTER_AUTH_SECRET=hackerator_secret_key_123456789
+      - BETTER_AUTH_SECRET=TvhPozpmsJe68q2T2F/oOyAmVuwsSX3dJSeUHUX7EY8=
       # Add other env vars here
     depends_on:
       - db

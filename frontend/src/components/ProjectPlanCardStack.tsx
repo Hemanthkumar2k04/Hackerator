@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Plus, X, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, X } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import Loader from '@/components/kokonutui/loader';
 
 interface ProjectPlan {
   project_title: string;
@@ -11,6 +12,7 @@ interface ProjectPlan {
   problem_statement: string;
   key_features: string[];
   target_users: string[];
+  team_size: number;
   tech_stack: {
     [key: string]: string[];
   };
@@ -27,16 +29,16 @@ interface ProjectPlanCardStackProps {
 }
 
 const techStackColors: { [key: string]: string } = {
-  frontend: "border-blue-500/50 bg-blue-950/10",
-  backend: "border-emerald-500/50 bg-emerald-950/10",
-  database: "border-yellow-500/50 bg-yellow-950/10",
-  devops: "border-purple-500/50 bg-purple-950/10",
-  authentication: "border-rose-500/50 bg-rose-950/10",
-  storage: "border-indigo-500/50 bg-indigo-950/10",
-  APIs_and_integrations: "border-pink-500/50 bg-pink-950/10",
-  testing: "border-teal-500/50 bg-teal-950/10",
-  monitoring_and_logging: "border-amber-500/50 bg-amber-950/10",
-  other_tools: "border-gray-500/50 bg-gray-950/10",
+  frontend: "border-black bg-black",
+  backend: "border-black bg-black",
+  database: "border-black bg-black",
+  devops: "border-black bg-black",
+  authentication: "border-black bg-black",
+  storage: "border-black bg-black",
+  APIs_and_integrations: "border-black bg-black",
+  testing: "border-black bg-black",
+  monitoring_and_logging: "border-black bg-black",
+  other_tools: "border-black bg-black",
 };
 
 export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, isLoading }: ProjectPlanCardStackProps) {
@@ -96,6 +98,26 @@ export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, 
                 />
               </div>
               <div className="space-y-2">
+                <Label className="text-neutral-400">Team Size</Label>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setProjectPlan({...projectPlan, team_size: Math.max(1, projectPlan.team_size - 1)})}
+                    className="p-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+                  >
+                    −
+                  </button>
+                  <div className="flex-1 h-14 rounded-xl border-2 border-neutral-800 bg-neutral-950 flex items-center justify-center">
+                    <span className="text-white text-lg font-semibold">{projectPlan.team_size} {projectPlan.team_size === 1 ? 'person' : 'people'}</span>
+                  </div>
+                  <button
+                    onClick={() => setProjectPlan({...projectPlan, team_size: projectPlan.team_size + 1})}
+                    className="p-2 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-2">
                 <Label className="text-neutral-400">Estimated Timeline</Label>
                 <Input 
                   value={projectPlan.estimated_timeline} 
@@ -122,26 +144,26 @@ export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, 
                       techStackColors[category] || "border-neutral-800 bg-neutral-900/50"
                     )}
                   >
-                    <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
-                      <h4 className="text-sm font-semibold text-neutral-300 uppercase tracking-wider">
-                        {category.replace(/_/g, ' ')}
-                      </h4>
-                      <button
-                        onClick={() => {
-                          if (!projectPlan.tech_stack) return;
-                          const newStack = { ...projectPlan.tech_stack };
-                          newStack[category] = [...newStack[category], ""];
-                          setProjectPlan({ ...projectPlan, tech_stack: newStack });
-                        }}
-                        className="p-1 hover:bg-white/10 rounded-full transition-colors"
-                      >
-                        <Plus className="w-3 h-3 text-neutral-400" />
+                  <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+                    <h4 className="text-base font-bold text-white uppercase tracking-wider">
+                      {category.replace(/_/g, ' ')}
+                    </h4>
+                    <button
+                      onClick={() => {
+                        if (!projectPlan.tech_stack) return;
+                        const newStack = { ...projectPlan.tech_stack };
+                        newStack[category] = [...newStack[category], ""];
+                        setProjectPlan({ ...projectPlan, tech_stack: newStack });
+                      }}
+                      className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                    >
+                      <Plus className="w-3 h-3 text-white" />
                       </button>
                     </div>
                     <ul className="space-y-2">
                       {techs.map((tech, i) => (
-                        <li key={i} className="flex items-center gap-2 text-sm text-neutral-200 group">
-                          <span className="w-1.5 h-1.5 rounded-full bg-white/50 shrink-0" />
+                        <li key={i} className="flex items-center gap-2 text-base text-white group">
+                          <span className="w-2 h-2 rounded-full bg-white shrink-0" />
                           <input
                             value={tech}
                             onChange={(e) => {
@@ -151,7 +173,7 @@ export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, 
                               newStack[category][i] = e.target.value;
                               setProjectPlan({ ...projectPlan, tech_stack: newStack });
                             }}
-                            className="flex-1 bg-transparent border-none text-neutral-200 p-0 h-auto focus:ring-0 focus:outline-none text-sm min-w-0"
+                            className="flex-1 bg-transparent border-none text-white p-0 h-auto focus:ring-0 focus:outline-none text-base min-w-0"
                           />
                           <button
                             onClick={() => {
@@ -162,7 +184,7 @@ export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, 
                             }}
                             className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded-full transition-all"
                           >
-                            <X className="w-3 h-3 text-neutral-400" />
+                            <X className="w-3 h-3 text-white" />
                           </button>
                         </li>
                       ))}
@@ -255,7 +277,7 @@ export function ProjectPlanCardStack({ projectPlan, setProjectPlan, onComplete, 
                       disabled={isLoading}
                       className="px-4 py-2 rounded-full bg-white text-black font-semibold text-xs hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
-                      {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : "Start Building"}
+                      {isLoading ? <Loader size="sm" title="" subtitle="" className="!gap-0 !p-0" /> : "Start Building"}
                     </button>
                   </>
                 )}

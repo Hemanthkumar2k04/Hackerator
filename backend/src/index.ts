@@ -21,11 +21,13 @@ app.use(express.json());
 import adminRoutes from './routes/admin';
 import ideasRoutes from './routes/ideas';
 import projectsRoutes from './routes/projects';
+import workspaceRoutes from './routes/workspace';
 
 app.use("/api/auth", toNodeHandler(auth));
 app.use("/api/admin", adminRoutes);
 app.use("/api/ideas", ideasRoutes);
 app.use("/api/projects", projectsRoutes);
+app.use("/api/workspace", workspaceRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hackerator Backend is running!');

@@ -24,6 +24,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/workspace" element={<WorkspacePage />} />
+          <Route path="/workspace/:projectId" element={<WorkspacePage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

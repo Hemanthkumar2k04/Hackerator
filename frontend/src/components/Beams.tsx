@@ -183,6 +183,7 @@ interface BeamsProps {
   noiseIntensity?: number;
   scale?: number;
   rotation?: number;
+  opacity?: number;
 }
 
 const Beams: FC<BeamsProps> = ({
@@ -193,7 +194,8 @@ const Beams: FC<BeamsProps> = ({
   speed = 2,
   noiseIntensity = 1.75,
   scale = 0.2,
-  rotation = 0
+  rotation = 0,
+  opacity = 1
 }) => {
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null!);
 
@@ -209,6 +211,7 @@ const Beams: FC<BeamsProps> = ({
   uniform float uSpeed;
   uniform float uNoiseIntensity;
   uniform float uScale;
+  uniform float uOpacity;
   ${noise}`,
         vertexHeader: `
   float getPos(vec3 pos) {
@@ -237,7 +240,8 @@ const Beams: FC<BeamsProps> = ({
         fragment: {
           '#include <dithering_fragment>': `
     float randomNoise = noise(gl_FragCoord.xy);
-    gl_FragColor.rgb -= randomNoise / 15. * uNoiseIntensity;`
+    gl_FragColor.rgb -= randomNoise / 15. * uNoiseIntensity;
+    gl_FragColor.a *= uOpacity;`
         },
         material: { fog: true },
         uniforms: {
@@ -248,10 +252,11 @@ const Beams: FC<BeamsProps> = ({
           uSpeed: { shared: true, mixed: true, linked: true, value: speed },
           envMapIntensity: 10,
           uNoiseIntensity: noiseIntensity,
-          uScale: scale
+          uScale: scale,
+          uOpacity: { value: opacity }
         }
       }),
-    [speed, noiseIntensity, scale]
+    [speed, noiseIntensity, scale, opacity]
   );
 
   return (

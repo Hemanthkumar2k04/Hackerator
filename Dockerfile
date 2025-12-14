@@ -7,7 +7,7 @@ WORKDIR /app/frontend
 COPY frontend/package.json frontend/package-lock.json* ./
 
 # Install dependencies - use npm install as fallback if no lock file exists
-RUN npm install --legacy-peer-deps --prefer-offline --no-audit
+RUN npm install --no-cache --legacy-peer-deps --prefer-offline --no-audit
 
 # Copy the rest of the application code
 COPY frontend/ .

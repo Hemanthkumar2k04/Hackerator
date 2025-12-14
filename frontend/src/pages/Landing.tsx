@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import LiquidChrome from '@/components/LiquidChrome';
 import { motion } from 'framer-motion';
 import { HoverEffect } from '@/components/ui/card-hover-effect';
+import CardFlip from '@/components/kokonutui/card-flip';
 import { 
   Brain, 
   Zap, 
@@ -13,10 +14,7 @@ import {
   Code, 
   ChevronRight, 
   Github, 
-  Twitter,
-  CheckCircle2,
-  Timer,
-  Trophy
+  Twitter
 } from 'lucide-react';
 
 const StepCard = ({ number, title, description, isLast }: { number: string, title: string, description: string, isLast?: boolean }) => (
@@ -200,69 +198,44 @@ export function LandingPage() {
           {/* Modes Section */}
           <section className="w-full py-24 px-4">
             <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">Choose Your Path</h2>
+                <p className="text-neutral-300">Hover to explore different building approaches</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center">
                 <motion.div 
                   initial={{ opacity: 0, x: -50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 relative overflow-hidden group"
+                  className="flex justify-center"
                 >
-                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Trophy className="w-64 h-64" />
-                  </div>
-                  <div className="relative z-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-500 text-sm font-medium mb-6">
-                      <Timer className="w-4 h-4" />
-                      Hackathon Mode
-                    </div>
-                    <h3 className="text-3xl font-bold mb-4">Build to Win</h3>
-                    <p className="text-neutral-300 mb-8 text-lg">
-                      Perfect for 24-48h sprints. We prioritize visual impact and core functionality over edge-cases.
-                    </p>
-                    <ul className="space-y-4 mb-8">
-                      {['MVP-focused roadmap', 'Rapid prototyping tools', 'Demo-day checklist', 'Pitch deck outline'].map((item, i) => (
-                        <li key={i} className="flex items-center gap-3 text-neutral-200">
-                          <CheckCircle2 className="w-5 h-5 text-orange-500" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <button onClick={() => navigate('/auth')} className="text-orange-500 font-bold hover:text-orange-400 transition-colors flex items-center gap-2">
-                      Start Hackathon Project <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <CardFlip
+                    title="Build to Win"
+                    subtitle="Hackathon Mode"
+                    description="Perfect for 24-48h sprints. We prioritize visual impact and core functionality over edge-cases."
+                    features={['MVP-focused roadmap', 'Rapid prototyping tools', 'Demo-day checklist', 'Pitch deck outline']}
+                    buttonText="Start Hackathon Project"
+                    onButtonClick={() => navigate('/auth')}
+                    accentColor="orange"
+                  />
                 </motion.div>
 
                 <motion.div 
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="p-8 md:p-12 rounded-3xl bg-gradient-to-br from-neutral-900 to-black border border-neutral-800 relative overflow-hidden group"
+                  className="flex justify-center"
                 >
-                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Rocket className="w-64 h-64" />
-                  </div>
-                  <div className="relative z-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-sm font-medium mb-6">
-                      <Layers className="w-4 h-4" />
-                      Project Mode
-                    </div>
-                    <h3 className="text-3xl font-bold mb-4">Build to Scale</h3>
-                    <p className="text-neutral-300 mb-8 text-lg">
-                      For long-term projects. We focus on clean architecture, testing, and scalability from day one.
-                    </p>
-                    <ul className="space-y-4 mb-8">
-                      {['Scalable Architecture', 'Testing Strategy', 'CI/CD Pipeline', 'Security Best Practices'].map((item, i) => (
-                        <li key={i} className="flex items-center gap-3 text-neutral-200">
-                          <CheckCircle2 className="w-5 h-5 text-blue-500" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <button onClick={() => navigate('/auth')} className="text-blue-500 font-bold hover:text-blue-400 transition-colors flex items-center gap-2">
-                      Start Complete Project <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <CardFlip
+                    title="Build to Scale"
+                    subtitle="Project Mode"
+                    description="For long-term projects. We focus on clean architecture, testing, and scalability from day one."
+                    features={['Scalable Architecture', 'Testing Strategy', 'CI/CD Pipeline', 'Security Best Practices']}
+                    buttonText="Start Complete Project"
+                    onButtonClick={() => navigate('/auth')}
+                    accentColor="blue"
+                  />
                 </motion.div>
               </div>
             </div>

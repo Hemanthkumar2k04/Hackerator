@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import Beams from '@/components/Beams';
 import { ProjectPlanCardStack } from '@/components/ProjectPlanCardStack';
 import Ai01 from '@/components/ai-01';
+import Loader from '@/components/kokonutui/loader';
+import { WorkInProgressCard } from '@/components/WorkInProgressCard';
+import { authClient } from '@/lib/auth-client';
 
 interface ProjectPlan {
   project_title: string;
@@ -17,6 +18,7 @@ interface ProjectPlan {
   problem_statement: string;
   key_features: string[];
   target_users: string[];
+  team_size: number;
   tech_stack: {
     [key: string]: string[];
   };
@@ -25,21 +27,60 @@ interface ProjectPlan {
   notes: string;
 }
 
+interface SavedProject {
+  id: number;
+  user_id: string;
+  project_title: string;
+  short_summary?: string;
+  mode: 'project' | 'hackathon';
+  team_size: number;
+  created_at: string;
+  updated_at: string;
+}
+
 
 
 export function HomePage() {
   const [activeMode, setActiveMode] = useState<'project' | 'hackathon' | null>(null);
   const navigate = useNavigate();
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
   const [projectPlan, setProjectPlan] = useState<ProjectPlan | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
+  const { data: session } = authClient.useSession();
+  const [recentProjects, setRecentProjects] = useState<SavedProject[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
 
-  const handleCreateProject = () => {
-    // In a real app, you would save the project details here
-    navigate('/workspace');
-  };
+  useEffect(() => {
+    const fetchRecentProjects = async () => {
+      if (!session?.user?.id) {
+        setLoadingProjects(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/projects', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+
+        const data = await response.json();
+        setRecentProjects(data.projects || []);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchRecentProjects();
+  }, [session?.user?.id]);
 
   const handleBack = () => {
     if (activeMode === 'project' && step === 2) {
@@ -81,24 +122,36 @@ export function HomePage() {
   };
 
   const handleStartBuilding = async () => {
-    if (!projectPlan) return;
+    if (!projectPlan || !session?.user?.id) {
+      toast.error("User session not available", {
+        description: "Please sign in to save your project.",
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/projects', {
+      const response = await fetch('http://localhost:3000/api/projects/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(projectPlan),
+        credentials: 'include',
+        body: JSON.stringify({
+          ...projectPlan,
+          user_id: session.user.id,
+          mode: activeMode,
+          team_size: projectPlan.team_size,
+        }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to save project');
       }
 
+      const data = await response.json();
       toast.success("Project saved successfully!");
-      navigate('/workspace');
+      navigate(`/workspace/${data.project_id}`);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save project", {
@@ -130,6 +183,8 @@ export function HomePage() {
     scale={0.2}
 
     rotation={45}
+        
+    opacity={0.3}
         />
       </div>
       <div className="relative z-10 flex flex-col min-h-screen h-auto justify-start">
@@ -196,19 +251,48 @@ export function HomePage() {
 
               <div className="mt-20 w-full max-w-4xl">
                 <h3 className="text-2xl font-bold mb-6 text-center text-white">Recent Projects</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="p-6 rounded-xl border border-neutral-800 bg-black shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                      <h4 className="font-semibold text-lg mb-2 text-white">Project {i}</h4>
-                      <p className="text-sm text-neutral-400">
-                        A brief description of the project goes here. It's a placeholder for now.
-                      </p>
-                      <div className="mt-4 flex items-center text-xs text-neutral-500">
-                        <span>2 hours ago</span>
+                {loadingProjects ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader size="md" title="" subtitle="" className="!gap-0 !p-0" />
+                  </div>
+                ) : recentProjects.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {recentProjects.map((project) => (
+                      <div 
+                        key={project.id}
+                        onClick={() => navigate(`/workspace/${project.id}`)}
+                        className="p-6 rounded-xl border border-neutral-800 bg-black shadow-sm hover:shadow-md transition-all cursor-pointer hover:border-neutral-700 group"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h4 className="font-semibold text-lg mb-2 text-white flex-1 group-hover:text-neutral-200 transition-colors">
+                            {project.project_title}
+                          </h4>
+                          <span className={cn(
+                            "text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2",
+                            project.mode === 'hackathon' 
+                              ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
+                              : "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                          )}>
+                            {project.mode === 'hackathon' ? 'Hackathon' : 'Project'}
+                          </span>
+                        </div>
+                        {project.short_summary && (
+                          <p className="text-sm text-neutral-400 mb-4 line-clamp-2">
+                            {project.short_summary}
+                          </p>
+                        )}
+                        <div className="flex items-center justify-between text-xs text-neutral-500">
+                          <span>{project.team_size} {project.team_size === 1 ? 'person' : 'people'}</span>
+                          <span>{new Date(project.created_at).toLocaleDateString()}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-neutral-400">No projects yet. Create your first project to get started!</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           ) : (
@@ -270,9 +354,11 @@ export function HomePage() {
                          </div>
 
                          {isLoading && (
-                            <div className="flex justify-center mt-8">
-                              <Loader2 className="w-8 h-8 animate-spin text-white" />
-                            </div>
+                            <Loader 
+                              title="Generating your project plan..."
+                              subtitle="Our AI is analyzing your idea and creating a comprehensive roadmap"
+                              size="md"
+                            />
                           )}
                        </motion.div>
                      ) : (
@@ -288,42 +374,8 @@ export function HomePage() {
                    </AnimatePresence>
                 </div>
               ) : (
-                <div className={cn(
-                  "w-full p-8 rounded-xl shadow-sm border",
-                  "bg-orange-950/10 border-orange-900/50"
-                )}>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="project-name" className="text-orange-100">
-                        Project Name
-                      </Label>
-                      <Input 
-                        id="project-name" 
-                        placeholder="Hackathon Winner 2025"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
-                        className="border-orange-800 focus-visible:ring-orange-500"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="project-desc" className="text-orange-100">
-                        Description (Optional)
-                      </Label>
-                      <Input 
-                        id="project-desc" 
-                        placeholder="What are you hacking?"
-                        value={projectDescription}
-                        onChange={(e) => setProjectDescription(e.target.value)}
-                        className="border-orange-800 focus-visible:ring-orange-500"
-                      />
-                    </div>
-                    <button 
-                      onClick={handleCreateProject}
-                      className="w-full px-6 py-3 rounded-lg font-medium transition-colors mt-4 bg-orange-500 text-white hover:bg-orange-600"
-                    >
-                      Start Hacking
-                    </button>
-                  </div>
+                <div className="w-full flex flex-col items-center justify-center py-8">
+                  <WorkInProgressCard />
                 </div>
               )}
             </motion.div>
