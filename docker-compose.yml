@@ -5,11 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5173:80"
+      - "80:80"
     depends_on:
       - backend
+    environment:
+      - VITE_API_URL=http://backend:3000
     networks:
       - app-network
+    restart: unless-stopped
 
   backend:
     build:
@@ -18,13 +21,19 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgres://hackerator:hackerator@2025@db:5432/hackerator_db
+      - DATABASE_URL=postgres://hackerator:hackerator%402025@db:5432/hackerator_db
       - BETTER_AUTH_SECRET=TvhPozpmsJe68q2T2F/oOyAmVuwsSX3dJSeUHUX7EY8=
-      # Add other env vars here
+      - BETTER_AUTH_URL=http://localhost:3000/api/auth
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
       - db
     networks:
       - app-network
+    restart: unless-stopped
 
   db:
     image: postgres:15-alpine
@@ -36,6 +45,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hackerator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4
@@ -48,6 +63,7 @@ services:
       - db
     networks:
       - app-network
+    restart: unless-stopped
 
 networks:
   app-network:
