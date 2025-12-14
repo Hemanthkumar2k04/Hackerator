@@ -40,7 +40,7 @@ export const PhaseNode = memo(({ data }: { data: PhaseNodeData }) => {
     // Save to database immediately
     if (data.projectId) {
       try {
-        const response = await fetch(`http://localhost:3000/api/workspace/${data.projectId}/task-complete`, {
+        const response = await fetch(`http://localhost:4000/api/workspace/${data.projectId}/task-complete`, {
           method: 'POST',
           credentials: 'include',
           headers: {

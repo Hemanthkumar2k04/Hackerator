@@ -35,7 +35,7 @@ export function WorkspacePage() {
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/api/workspace/${projectId}`, {
+        const response = await fetch(`http://localhost:4000/api/workspace/${projectId}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -74,7 +74,7 @@ export function WorkspacePage() {
           setIsValidating(false); // Stop validating, start generating
           
           // Call generate endpoint
-          const genResponse = await fetch(`http://localhost:3000/api/workspace/${projectId}/generate`, {
+          const genResponse = await fetch(`http://localhost:4000/api/workspace/${projectId}/generate`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -87,7 +87,7 @@ export function WorkspacePage() {
           }
 
           // Fetch data again after generation
-          const refetchResponse = await fetch(`http://localhost:3000/api/workspace/${projectId}`, {
+          const refetchResponse = await fetch(`http://localhost:4000/api/workspace/${projectId}`, {
             method: 'GET',
             credentials: 'include',
             headers: {

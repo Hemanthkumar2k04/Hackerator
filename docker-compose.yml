@@ -5,11 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "5173:80"
     depends_on:
       - backend
     environment:
-      - VITE_API_URL=http://backend:3000
+      - VITE_API_URL=http://backend:4000
     networks:
       - app-network
     restart: unless-stopped
@@ -19,11 +19,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "4000:3000"
     environment:
       - DATABASE_URL=postgres://hackerator:hackerator%402025@db:5432/hackerator_db
       - BETTER_AUTH_SECRET=TvhPozpmsJe68q2T2F/oOyAmVuwsSX3dJSeUHUX7EY8=
-      - BETTER_AUTH_URL=http://localhost:3000/api/auth
+      - BETTER_AUTH_URL=http://backend:4000/api/auth
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}

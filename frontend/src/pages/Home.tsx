@@ -58,7 +58,7 @@ export function HomePage() {
       }
 
       try {
-        const response = await fetch('http://localhost:3000/api/projects', {
+        const response = await fetch('http://localhost:4000/api/projects', {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -96,7 +96,7 @@ export function HomePage() {
 
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:3000/api/ideas/generate', {
+        const response = await fetch('http://localhost:4000/api/ideas/generate', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export function HomePage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/api/projects/save', {
+      const response = await fetch('http://localhost:4000/api/projects/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
